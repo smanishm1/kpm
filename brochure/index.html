@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kraft Paper Mill LLC – Brochure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* -------- PRINT + PAGE -------- */
+    @page {
+      size: A4;
+      margin: 14mm;
+    }
+    @media print {
+      .page { page-break-after: always; }
+      .no-break { page-break-inside: avoid; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    /* -------- THEME -------- */
+    :root{
+      --navy:#0a2a5e;          /* brand navy */
+      --accent:#c43b33;        /* accent (ships today red) */
+      --kraft:#d9c2a2;         /* kraft base */
+      --ink:#333333;
+      --muted:#6b6b6b;
+      --tile:#f5f5f5;
+    }
+
+    html,body { font-family: Arial, Helvetica, sans-serif; color: var(--ink); margin:0; }
+    h1,h2,h3 { color: var(--navy); margin: 0 0 10px; }
+    h1 { font-size: 34px; letter-spacing: 0.3px; }
+    h2 { font-size: 24px; }
+    h3 { font-size: 18px; }
+
+    p,li { font-size: 14px; line-height: 1.55; }
+    .muted{ color: var(--muted); }
+    .bold{ font-weight: 700; }
+
+    /* Corrugated background effect */
+    .kraft-bg{
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(0,0,0,0.05) 0px,
+          rgba(0,0,0,0.05) 2px,
+          rgba(0,0,0,0) 2px,
+          rgba(0,0,0,0) 10px
+        ),
+        linear-gradient(180deg, #e5d1b8 0%, var(--kraft) 100%);
+    }
+
+    .cover{
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .cover-head{
+      background: var(--navy);
+      color: #fff;
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .cover-head .api-logo{
+      width: 56px; height: 56px; border-radius: 6px; background: #fff;
+      display: grid; place-items: center; overflow: hidden;
+    }
+    .cover-hero{
+      padding: 18px 22px 8px;
+      background: #ffffff;
+      border-bottom: 4px solid var(--navy);
+    }
+    .cover-hero .title{
+      font-size: 36px; color: var(--navy); font-weight: 800; letter-spacing: .3px;
+    }
+    .cover-hero .tagline{ font-size: 16px; color:#002a5e; margin-top: 6px; }
+    .cover-hero .subtag{ font-size: 13.5px; color: var(--muted); margin-top: 8px; }
+
+    .banner-wrap{
+      background: #000;
+      border-top: 6px solid #ffffff;
+      border-bottom: 6px solid var(--accent);
+    }
+    .banner-wrap img{ width: 100%; display: block; }
+
+    .cover-info{
+      display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px;
+      padding: 16px 22px 22px; background: #fff;
+    }
+    .badge{
+      display: inline-block; padding: 6px 10px; background: #eef3ff; color: var(--navy);
+      border: 1px solid #cfd9ff; border-radius: 16px; font-size: 12px; font-weight: 700;
+      margin-right: 8px; margin-top: 6px;
+    }
+    .qr{
+      text-align: right;
+    }
+    .qr img{ width: 120px; height: 120px; border: 6px solid #f3f3f3; border-radius: 8px; }
+
+    /* section layout */
+    .section{ padding: 18px 0; }
+    .section .inner{ padding: 0 6px; }
+    .band{ padding: 16px; border-radius: 8px; background: #f7f9fc; }
+
+    .two-col{ display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .three-col{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .grid-tiles{
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    }
+    .tile{
+      background: var(--tile);
+      border: 1px solid #e6e6e6;
+      border-radius: 8px;
+      padding: 12px;
+      display: grid; grid-template-columns: 80px 1fr; gap: 12px; align-items: center;
+    }
+    .tile img, .tile svg{ width: 80px; height: 80px; object-fit: contain; }
+    .note{ font-size: 12px; color: var(--muted); }
+
+    .photo-row{
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;
+    }
+    .photo{
+      height: 140px; border-radius: 8px; background: #dde3ea; border: 1px solid #cbd5e1;
+      display:grid; place-items:center; color:#466; font-size: 12px;
+    }
+
+    .footer{
+      color: #fff; background: var(--navy);
+      padding: 10px 14px; border-radius: 8px; text-align: center; font-size: 12.5px;
+    }
+
+    .page{ padding: 10px 8px; }
+    .page.kraft-bg{ padding: 10px 8px; border-radius: 8px; }
+    .spacer{ height: 6px; }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <div class="page cover kraft-bg">
+    <div class="cover-head">
+      <div class="api-logo">
+        <!-- Save image as assets/images/api-logo.png -->
+        <img src="assets/images/api-logo.png" alt="API Logo" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div>
+        <div class="bold" style="font-size:15px;">Sister Company & Manufacturing Partner</div>
+        <div class="muted" style="font-size:13px;">Ariya Packaging Industries (API)</div>
+      </div>
+    </div>
+
+    <div class="cover-hero">
+      <div class="title">Kraft Paper Mill LLC</div>
+      <div class="tagline">We Think Inside The Box and Packaging</div>
+      <div class="subtag">Manufacturer & Expanding Our Network • Now closer to you — Serving from Norristown, PA</div>
+      <div class="spacer"></div>
+      <span class="badge">Eco‑friendly Kraft Solutions</span>
+      <span class="badge">Custom Sizes & Grades</span>
+      <span class="badge">Fast, Reliable Delivery</span>
+    </div>
+
+    <div class="banner-wrap">
+      <!-- Save image as assets/images/corrugated-banner.jpg -->
+      <img src="assets/images/corrugated-banner.jpg" alt="Corrugated Boxes Banner">
+    </div>
+
+    <div class="cover-info">
+      <div>
+        <p style="margin:0 0 10px;">
+          Located at <b>1001 W Washington St, Norristown, PA, Unit 203</b>.<br>
+          Fully automated facilities producing over <b>25,000 MT annually</b>.
+        </p>
+        <p class="note">Sister company of Ariya Packaging Industries. All products can be tailored by grade, GSM, width, and finish.</p>
+      </div>
+      <div class="qr">
+        <!-- QR to your website -->
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=http%3A%2F%2Fwww.kraftpapermill.com" alt="QR: www.kraftpapermill.com">
+        <div class="muted" style="margin-top:6px;">Scan for website & inquiries</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 2: ABOUT + STRENGTHS -->
+  <div class="page">
+    <div class="section">
+      <h2>About Us</h2>
+      <div class="band">
+        <p><b>Kraft Paper Mill LLC</b> is a premier kraft paper manufacturer delivering high-quality, eco-friendly solutions across the United States. As a <i>sister company and manufacturing partner of Ariya Packaging Industries (API)</i>, we combine global know-how with local service to support your growth while meeting rigorous environmental standards.</p>
+        <p>From our Norristown, PA facility, we provide responsive lead times, consistent quality, and flexible order quantities—whether you need kraft reels, sheets, specialty grades, or corrugated packaging components.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Our Strengths & Capabilities</h2>
+      <div class="two-col">
+        <ul class="band">
+          <li><b>Advanced, automated lines</b> delivering > <b>25,000 MT</b> per year.</li>
+          <li><b>FSC-aligned sourcing</b> and resource-efficient processes.</li>
+          <li><b>Custom GSM, widths, cores</b>, and finishes on request.</li>
+          <li><b>Regional logistics</b> for PA, NJ, NY, and beyond.</li>
+          <li><b>Application support</b> from packaging specialists.</li>
+        </ul>
+        <ul class="band">
+          <li>Consistent <b>strength and porosity</b> control.</li>
+          <li><b>Greaseproof/wet-strength</b> options for specialty needs.</li>
+          <li>Strict <b>QA checkpoints</b> from pulp to finished roll/sheet.</li>
+          <li><b>Short runs to bulk volumes</b> with reliable schedules.</li>
+          <li><b>Private-label and print</b> options for retail presentation.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: PRODUCTS -->
+  <div class="page kraft-bg">
+    <h2 style="margin-bottom:10px;">Product Categories</h2>
+    <p class="muted" style="margin:0 0 10px;">Precisely matched to your application—wrapping, converting, box-making, e‑commerce, and more.</p>
+
+    <div class="grid-tiles">
+      <div class="tile">
+        <img src="assets/svg/corrugated-rolls.svg" alt="Corrugated Rolls">
+        <div>
+          <h3>Corrugated Rolls</h3>
+          <p>Flexible protection for wrapping and void fill. Custom widths and diameters available.</p>
+        </div>
+      </div>
+
+      <div class="tile">
+        <img src="assets/svg/edge-protectors.svg" alt="Edge Protectors">
+        <div>
+          <h3>Edge Protectors</h3>
+          <p>Paper angle boards to reinforce pallet edges and minimize transit damage.</p>
+        </div>
+      </div>
+
+      <div class="tile">
+        <img src="assets/svg/honeycomb-paper.svg" alt="Honeycomb Paper">
+        <div>
+          <h3>Honeycomb Paper</h3>
+          <p>Lightweight, high-strength pads and boards for cushioning and load support.</p>
+        </div>
+      </div>
+
+      <div class="tile">
+        <img src="assets/images/icon-kraft.png" alt="Kraft Paper" onerror="this.style.opacity='0.2'">
+        <div>
+          <h3>Brown Kraft Paper</h3>
+          <p>General-purpose wrapping and industrial packaging in reels or sheets.</p>
+        </div>
+      </div>
+
+      <div class="tile">
+        <img src="assets/images/icon-bleached.png" alt="Bleached Kraft" onerror="this.style.opacity='0.2'">
+        <div>
+          <h3>Bleached Kraft Paper</h3>
+          <p>Clean appearance for food, retail, and premium applications.</p>
+        </div>
+      </div>
+
+      <div class="tile">
+        <img src="assets/images/icon-specialty.png" alt="Specialty Kraft" onerror="this.style.opacity='0.2'">
+        <div>
+          <h3>Specialty Kraft</h3>
+          <p>Wet-strength, greaseproof, and barrier-treated grades on request.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:10px;">
+      Need a custom spec? Ask for exact GSM, Mullen/BF, widths, core IDs, and finish. Print and branding options available.
+    </div>
+  </div>
+
+  <!-- PAGE 4: MANUFACTURING & QUALITY + PHOTOS -->
+  <div class="page">
+    <div class="section">
+      <h2>Manufacturing & Quality</h2>
+      <div class="band">
+        <p>Our automated lines maintain tight tolerances from furnish prep to winding, ensuring stable caliper, strength, and surface quality. We emphasize material efficiency and responsible sourcing, with continuous improvement programs to minimize waste and energy use.</p>
+        <div class="photo-row">
+          <div class="photo">Manufacturing Photo Placeholder A</div>
+          <div class="photo">Manufacturing Photo Placeholder B</div>
+        </div>
+        <p class="note">Replace placeholders with high-resolution plant photos when available.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Industries We Serve</h2>
+      <div class="three-col band">
+        <ul>
+          <li>Packaging & Shipping</li>
+          <li>E‑commerce & Retail</li>
+          <li>Food & Beverage</li>
+        </ul>
+        <ul>
+          <li>Textile & Apparel</li>
+          <li>Automotive & Industrial</li>
+          <li>Printing & Publishing</li>
+        </ul>
+        <ul>
+          <li>3PL / Fulfillment</li>
+          <li>Converters & Box Makers</li>
+          <li>Distribution & Wholesale</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 5: CONTACT / BACK -->
+  <div class="page kraft-bg">
+    <div class="section">
+      <h2>Contact Us</h2>
+      <div class="band two-col">
+        <div>
+          <p><b>Kraft Paper Mill LLC</b><br>
+          1001 W Washington St, Norristown, PA, Unit 203</p>
+          <p>Phone: <b>630-796-5586</b><br>
+          Email: <a href="mailto:smanishm1@gmail.com">smanishm1@gmail.com</a><br>
+          Web: <a href="http://www.kraftpapermill.com">www.kraftpapermill.com</a></p>
+          <p class="muted">We Think Inside The Box and Packaging</p>
+        </div>
+        <div class="qr" style="text-align:center;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=http%3A%2F%2Fwww.kraftpapermill.com" alt="QR: www.kraftpapermill.com">
+          <div class="muted" style="margin-top:6px;">Scan to inquire or place an order</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer no-break">
+      <div>© Kraft Paper Mill LLC • Sister Company & Manufacturing Partner of Ariya Packaging Industries • Serving from Norristown, PA</div>
+      <div style="margin-top:4px; font-weight:700;">Connecting Shores – East to West</div>
+    </div>
+  </div>
+
+</body>
+</html>
