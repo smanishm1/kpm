@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="h" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#f1dfc3"/>
+      <stop offset="1" stop-color="#cfad80"/>
+    </linearGradient>
+    <pattern id="cells" x="0" y="0" width="24" height="21" patternUnits="userSpaceOnUse">
+      <polygon points="12,0 24,7 24,14 12,21 0,14 0,7" fill="none" stroke="#b89162" stroke-width="1.5"/>
+    </pattern>
+  </defs>
+  <rect x="12" y="12" width="232" height="232" rx="16" fill="url(#h)" stroke="#9f7f53" stroke-width="3"/>
+  <rect x="28" y="40" width="200" height="176" rx="10" fill="url(#cells)" />
+  <rect x="28" y="40" width="200" height="176" rx="10" fill="transparent" stroke="#9f7f53" stroke-width="2"/>
+  <text x="36" y="224" font-family="Arial" font-size="14" fill="#6b5b47">Honeycomb Core / Pads</text>
+  <title>Honeycomb Paper</title>
+</svg>
