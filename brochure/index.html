@@ -1,338 +1,533 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Kraft Paper Mill LLC – Brochure</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    /* -------- PRINT + PAGE -------- */
-    @page {
-      size: A4;
-      margin: 14mm;
-    }
-    @media print {
-      .page { page-break-after: always; }
-      .no-break { page-break-inside: avoid; }
-      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kraft Paper Mill — Company Brochure</title>
+  <meta name="description" content="High-strength kraft paper, linerboard, and fluting from a modern kraft paper mill. Sustainable, reliable, global shipments." />
 
-    /* -------- THEME -------- */
+  <style>
+    /* ========= THEME ========= */
     :root{
       --navy:#0a2a5e;          /* brand navy */
-      --accent:#c43b33;        /* accent (ships today red) */
-      --kraft:#d9c2a2;         /* kraft base */
-      --ink:#333333;
-      --muted:#6b6b6b;
-      --tile:#f5f5f5;
+      --accent:#c43b33;        /* accent (CTA red) */
+      --ink:#222;              /* primary text */
+      --muted:#667085;         /* secondary text */
+      --tile:#f5f5f5;          /* light panels */
+      --ok:#159b5b;            /* green for sustainability stats */
+      --warn:#e6a700;
+
+      /* kraft background palette */
+      --kraft-base:#ead6c3;                 /* base fill */
+      --kraft-stripe:rgba(185,152,114,.18); /* vertical stripe color */
+      --stripe-w:2px;                        /* stripe width */
+      --stripe-gap:12px;                     /* distance to next stripe */
+
+      --radius:12px;
+      --gap:18px;
+      --page-pad:32px;
+      --maxw:960px;
     }
 
-    html,body { font-family: Arial, Helvetica, sans-serif; color: var(--ink); margin:0; }
-    h1,h2,h3 { color: var(--navy); margin: 0 0 10px; }
-    h1 { font-size: 34px; letter-spacing: 0.3px; }
-    h2 { font-size: 24px; }
-    h3 { font-size: 18px; }
+    /* ========= BASE ========= */
+    *,*::before,*::after{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color:var(--ink);
+      font: 15px/1.55 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,Helvetica,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
 
-    p,li { font-size: 14px; line-height: 1.55; }
-    .muted{ color: var(--muted); }
-    .bold{ font-weight: 700; }
-
-    /* Corrugated background effect */
-    .kraft-bg{
+      /* Global kraft background */
       background:
         repeating-linear-gradient(
           90deg,
-          rgba(0,0,0,0.05) 0px,
-          rgba(0,0,0,0.05) 2px,
-          rgba(0,0,0,0) 2px,
-          rgba(0,0,0,0) 10px
+          var(--kraft-stripe) 0 var(--stripe-w),
+          transparent var(--stripe-w) var(--stripe-gap)
         ),
-        linear-gradient(180deg, #e5d1b8 0%, var(--kraft) 100%);
+        var(--kraft-base);
+    }
+    a{ color:var(--navy); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+    img{ max-width:100%; height:auto; display:block; }
+
+    /* ========= LAYOUT ========= */
+    .wrap{
+      width:100%;
+      margin:0 auto;
+      max-width:var(--maxw);
+      padding: 24px var(--page-pad);
     }
 
-    .cover{
-      border-radius: 8px;
-      overflow: hidden;
+    /* Each .page is a printable page. In the browser they stack vertically. */
+    .page{
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 6px 30px rgba(0,0,0,.08);
+      overflow:hidden;
+      margin: 28px auto;
+      border:1px solid rgba(0,0,0,.06);
     }
-    .cover-head{
-      background: var(--navy);
-      color: #fff;
-      padding: 20px 22px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
+    .page > .inner{
+      padding: clamp(20px, 4vw, 40px);
     }
-    .cover-head .api-logo{
-      width: 56px; height: 56px; border-radius: 6px; background: #fff;
-      display: grid; place-items: center; overflow: hidden;
-    }
-    .cover-hero{
-      padding: 18px 22px 8px;
-      background: #ffffff;
-      border-bottom: 4px solid var(--navy);
-    }
-    .cover-hero .title{
-      font-size: 36px; color: var(--navy); font-weight: 800; letter-spacing: .3px;
-    }
-    .cover-hero .tagline{ font-size: 16px; color:#002a5e; margin-top: 6px; }
-    .cover-hero .subtag{ font-size: 13.5px; color: var(--muted); margin-top: 8px; }
 
-    .banner-wrap{
-      background: #000;
-      border-top: 6px solid #ffffff;
-      border-bottom: 6px solid var(--accent);
+    .grid{
+      display:grid;
+      gap:var(--gap);
     }
-    .banner-wrap img{ width: 100%; display: block; }
+    .grid.two{ grid-template-columns: 1fr; }
+    .grid.three{ grid-template-columns: 1fr; }
+    @media (min-width: 860px){
+      .grid.two{ grid-template-columns: 1fr 1fr; }
+      .grid.three{ grid-template-columns: repeat(3,1fr); }
+    }
 
-    .cover-info{
-      display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px;
-      padding: 16px 22px 22px; background: #fff;
+    .tag{
+      display:inline-block;
+      background: #0a2a5e08;
+      border:1px solid #0a2a5e20;
+      color:var(--navy);
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:600;
+      font-size:.82rem;
+      letter-spacing:.2px;
     }
     .badge{
-      display: inline-block; padding: 6px 10px; background: #eef3ff; color: var(--navy);
-      border: 1px solid #cfd9ff; border-radius: 16px; font-size: 12px; font-weight: 700;
-      margin-right: 8px; margin-top: 6px;
+      display:inline-flex; align-items:center; gap:8px;
+      font-weight:700; color:#fff; background:var(--accent);
+      padding:8px 12px; border-radius:999px; box-shadow:0 8px 22px rgba(196,59,51,.25);
     }
-    .qr{
-      text-align: right;
-    }
-    .qr img{ width: 120px; height: 120px; border: 6px solid #f3f3f3; border-radius: 8px; }
+    .muted{ color:var(--muted); }
 
-    /* section layout */
-    .section{ padding: 18px 0; }
-    .section .inner{ padding: 0 6px; }
-    .band{ padding: 16px; border-radius: 8px; background: #f7f9fc; }
+    .kpi{
+      display:flex; flex-direction:column;
+      background:var(--tile);
+      border:1px solid #00000010;
+      padding:16px; border-radius:12px;
+      min-height:100%;
+    }
+    .kpi .num{ font-size: clamp(28px, 4vw, 42px); font-weight:800; color:var(--navy); }
+    .kpi .sub{ color:var(--muted); font-weight:600; margin-top:4px; }
 
-    .two-col{ display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .three-col{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .grid-tiles{
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
-    }
-    .tile{
-      background: var(--tile);
-      border: 1px solid #e6e6e6;
-      border-radius: 8px;
-      padding: 12px;
-      display: grid; grid-template-columns: 80px 1fr; gap: 12px; align-items: center;
-    }
-    .tile img, .tile svg{ width: 80px; height: 80px; object-fit: contain; }
-    .note{ font-size: 12px; color: var(--muted); }
-
-    .photo-row{
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px;
-    }
-    .photo{
-      height: 140px; border-radius: 8px; background: #dde3ea; border: 1px solid #cbd5e1;
-      display:grid; place-items:center; color:#466; font-size: 12px;
+    .panel{
+      background:var(--tile);
+      border:1px solid #00000010;
+      border-radius:12px;
+      padding:16px;
     }
 
-    .footer{
-      color: #fff; background: var(--navy);
-      padding: 10px 14px; border-radius: 8px; text-align: center; font-size: 12.5px;
+    .list{
+      display:grid; gap:10px;
+    }
+    .list .li{ display:flex; gap:10px; align-items:flex-start; }
+    .list .li:before{
+      content:"";
+      width:10px; height:10px; margin-top:7px;
+      border-radius:2px; background:var(--navy);
+      box-shadow:0 0 0 3px #0a2a5e14;
+      flex:0 0 auto;
     }
 
-    .page{ padding: 10px 8px; }
-    .page.kraft-bg{ padding: 10px 8px; border-radius: 8px; }
-    .spacer{ height: 6px; }
+    .table{
+      border-collapse:collapse; width:100%; overflow:auto;
+    }
+    .table th,.table td{
+      border:1px solid #00000014;
+      padding:10px 12px; text-align:left;
+    }
+    .table th{ background:#0a2a5e08; color:#0a2a5e; font-weight:700; }
+    .table caption{ text-align:left; font-weight:800; margin-bottom:10px; color:var(--navy); }
+
+    .hero{
+      display:grid; gap:20px;
+      grid-template-columns: 1fr;
+      align-items:center;
+    }
+    @media (min-width: 980px){
+      .hero{ grid-template-columns: 1.2fr .8fr; }
+    }
+    .hero .title{
+      font-size: clamp(28px, 3.6vw, 48px);
+      line-height:1.12;
+      margin:0;
+      color:var(--navy);
+      font-weight:900;
+      letter-spacing:-.2px;
+    }
+    .eyebrow{
+      text-transform:uppercase; letter-spacing:.18em; font-weight:800; font-size:.78rem; color:var(--muted);
+    }
+
+    .brand{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:22px;
+    }
+    .brand .left{ display:flex; align-items:center; gap:14px; }
+    .brand .logo{
+      width:44px; height:44px; border-radius:10px; background:var(--navy);
+      display:grid; place-items:center; color:#fff; font-weight:800;
+    }
+    .brand .name{
+      font-weight:900; color:var(--navy); font-size:20px; letter-spacing:.2px;
+    }
+
+    .features{
+      display:grid; gap:12px;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+    }
+    @media (min-width: 760px){
+      .features{ grid-template-columns: repeat(4, minmax(0,1fr)); }
+    }
+
+    .caption{ font-size:.86rem; color:var(--muted); }
+
+    .cta{
+      display:inline-flex; align-items:center; gap:10px;
+      background:var(--navy); color:#fff; padding:12px 16px;
+      border-radius:10px; font-weight:800; box-shadow:0 8px 22px #0a2a5e33;
+    }
+    .cta .dot{
+      width:8px; height:8px; border-radius:999px; background:#37d67a;
+      box-shadow:0 0 0 3px #37d67a33;
+    }
+
+    /* ========= PRINT ========= */
+    @media print{
+      html, body { height: auto; }
+      body{
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .wrap{ padding:0; max-width:none; }
+      .page{
+        margin:0; border:none; border-radius:0; box-shadow:none; page-break-after:always;
+      }
+      .page:last-child{ page-break-after:auto; }
+      .no-print{ display:none !important; }
+      .print-show{ display:initial !important; }
+      a[href^="http"]:after{
+        content:" (" attr(href) ")"; color:#666; font-size:.8em;
+      }
+      @page{
+        size: A4; /* change to Letter if needed */
+        margin: 10mm;
+      }
+    }
+
+    /* ========= SMALL UTILITIES ========= */
+    .ok{ color:var(--ok); }
+    .warn{ color:var(--warn); }
+    hr{ border:none; border-top:1px solid #00000014; margin:16px 0; }
+    h2{ margin:0 0 12px; font-size: clamp(20px, 2.2vw, 28px); color:var(--navy); }
+    h3{ margin:0 0 8px; font-size: clamp(16px, 1.6vw, 20px); color:var(--navy); }
+    p{ margin: 6px 0 12px; }
   </style>
 </head>
+
 <body>
+  <div class="wrap">
 
-  <!-- COVER PAGE -->
-  <div class="page cover kraft-bg">
-    <div class="cover-head">
-      <div class="api-logo">
-        <!-- Save image as assets/images/api-logo.png -->
-        <img src="assets/images/api-logo.png" alt="API Logo" style="width:100%;height:100%;object-fit:cover;">
-      </div>
-      <div>
-        <div class="bold" style="font-size:15px;">Sister Company & Manufacturing Partner</div>
-        <div class="muted" style="font-size:13px;">Ariya Packaging Industries (API)</div>
-      </div>
-    </div>
+    <!-- PAGE 1: Cover -->
+    <section class="page">
+      <div class="inner">
+        <div class="brand">
+          <div class="left">
+            <div class="logo" aria-label="Logo">KP</div>
+            <div>
+              <div class="name">Kraft Paper Mill</div>
+              <div class="caption">High-strength paper for packaging that moves the world</div>
+            </div>
+          </div>
+          <span class="badge"><span class="dot" style="background:#fff;width:6px;height:6px;border-radius:50%"></span> Ships globally</span>
+        </div>
 
-    <div class="cover-hero">
-      <div class="title">Kraft Paper Mill LLC</div>
-      <div class="tagline">We Think Inside The Box and Packaging</div>
-      <div class="subtag">Manufacturer & Expanding Our Network • Now closer to you — Serving from Norristown, PA</div>
-      <div class="spacer"></div>
-      <span class="badge">Eco‑friendly Kraft Solutions</span>
-      <span class="badge">Custom Sizes & Grades</span>
-      <span class="badge">Fast, Reliable Delivery</span>
-    </div>
+        <div class="hero">
+          <div>
+            <div class="eyebrow">Sustainable. Reliable. Scalable.</div>
+            <h1 class="title">Premium Kraft Paper, Linerboard, and Fluting</h1>
+            <p class="muted">From recycled and virgin fibers to value-added finishes, our kraft portfolio is engineered for strength, printability, and consistent converting performance.</p>
 
-    <div class="banner-wrap">
-      <!-- Save image as assets/images/corrugated-banner.jpg -->
-      <img src="assets/images/corrugated-banner.jpg" alt="Corrugated Boxes Banner">
-    </div>
+            <div class="features">
+              <div class="kpi">
+                <div class="num">200,000+</div>
+                <div class="sub">TPA Installed Capacity</div>
+              </div>
+              <div class="kpi">
+                <div class="num">60–350</div>
+                <div class="sub">GSM Range</div>
+              </div>
+              <div class="kpi">
+                <div class="num">BF 14–40</div>
+                <div class="sub">Burst Factor</div>
+              </div>
+              <div class="kpi">
+                <div class="num">30+</div>
+                <div class="sub">Export Destinations</div>
+              </div>
+            </div>
 
-    <div class="cover-info">
-      <div>
-        <p style="margin:0 0 10px;">
-          Located at <b>1001 W Washington St, Norristown, PA, Unit 203</b>.<br>
-          Fully automated facilities producing over <b>25,000 MT annually</b>.
-        </p>
-        <p class="note">Sister company of Ariya Packaging Industries. All products can be tailored by grade, GSM, width, and finish.</p>
+            <p>
+              <a class="cta" href="mailto:sales@example.com?subject=Kraft%20Paper%20Enquiry">
+                <span class="dot" aria-hidden="true"></span>
+                Request Samples & Specs
+              </a>
+            </p>
+            <p class="caption">Lead times as fast as 3–7 days. Custom reels, cores, and packaging available.</p>
+          </div>
+
+          <div>
+            <img src="assets/mill-hero.jpg" alt="Modern kraft paper mill with paper machine and jumbo reels" />
+            <div class="caption">State-of-the-art paper machine with automated QCS and reel handling.</div>
+          </div>
+        </div>
       </div>
-      <div class="qr">
-        <!-- QR to your website -->
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=http%3A%2F%2Fwww.kraftpapermill.com" alt="QR: www.kraftpapermill.com">
-        <div class="muted" style="margin-top:6px;">Scan for website & inquiries</div>
+    </section>
+
+    <!-- PAGE 2: About + Capabilities -->
+    <section class="page">
+      <div class="inner">
+        <div class="grid two">
+          <div>
+            <h2>About Us</h2>
+            <p>We manufacture high-quality kraft paper grades for corrugated packaging and specialty applications. Our mill blends process discipline, quality control, and sustainability to deliver consistent, high-strength reels to converters worldwide.</p>
+            <div class="panel">
+              <div class="list">
+                <div class="li"><div><strong>Certifications:</strong> ISO 9001, ISO 14001, ISO 45001, FSC® (on request)</div></div>
+                <div class="li"><div><strong>QA Systems:</strong> Online QCS, reel profile control, lab-tested per TAPPI/ISO</div></div>
+                <div class="li"><div><strong>Logistics:</strong> Containerized exports, inland rail/road, seaworthy packaging</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2>Capabilities</h2>
+            <div class="grid two">
+              <div class="kpi"><div class="num">2.5–4.2 m</div><div class="sub">Deckle/Trim Widths</div></div>
+              <div class="kpi"><div class="num">400–1800</div><div class="sub">Core IDs (mm)</div></div>
+              <div class="kpi"><div class="num">500–2500</div><div class="sub">Reel OD (mm)</div></div>
+              <div class="kpi"><div class="num">0.2–1.0%</div><div class="sub">Moisture Profile Variation</div></div>
+            </div>
+            <hr />
+            <div class="list">
+              <div class="li"><div>Basis weight control with MD/CD profiling for flat, printable sheets</div></div>
+              <div class="li"><div>Refining and strength optimization for BF/RCT targets</div></div>
+              <div class="li"><div>Surface sizing, optional wet-strength, and low-Cobb recipes</div></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- PAGE 3: Products & Technical Specs -->
+    <section class="page">
+      <div class="inner">
+        <h2>Products & Technical Specifications</h2>
+        <p class="muted">All values are typical. Tailored specs available per application and climate.</p>
+
+        <div class="grid two">
+          <div class="panel">
+            <h3>Kraft Liner</h3>
+            <p>High-strength linerboard with good printability and stiffness for corrugated outer layers.</p>
+            <table class="table">
+              <caption>Typical Properties</caption>
+              <thead>
+                <tr><th>Property</th><th>Value</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>GSM</td><td>125–350</td></tr>
+                <tr><td>Burst Factor (BF)</td><td>18–40</td></tr>
+                <tr><td>Ring Crush (RCT)</td><td>As required</td></tr>
+                <tr><td>Cobb (60s)</td><td>25–40 g/m²</td></tr>
+                <tr><td>Moisture</td><td>6.5–8.5%</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <h3>Test Liner</h3>
+            <p>Recycled-based linerboard engineered for consistent strength and value.</p>
+            <table class="table">
+              <caption>Typical Properties</caption>
+              <thead>
+                <tr><th>Property</th><th>Value</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>GSM</td><td>120–250</td></tr>
+                <tr><td>Burst Factor (BF)</td><td>16–35</td></tr>
+                <tr><td>Ring Crush (RCT)</td><td>As required</td></tr>
+                <tr><td>Cobb (60s)</td><td>30–50 g/m²</td></tr>
+                <tr><td>Moisture</td><td>6.5–8.5%</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <h3>Fluting/Medium</h3>
+            <p>Optimized for crush resistance and runnability on corrugators.</p>
+            <table class="table">
+              <caption>Typical Properties</caption>
+              <thead>
+                <tr><th>Property</th><th>Value</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>GSM</td><td>90–200</td></tr>
+                <tr><td>RCT/ECT</td><td>As required</td></tr>
+                <tr><td>Cobb (60s)</td><td>30–60 g/m²</td></tr>
+                <tr><td>Moisture</td><td>6.5–8.5%</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <h3>Specialty Grades</h3>
+            <p>For industrial wraps, paper bags, cores, honeycomb, and converting.</p>
+            <div class="list">
+              <div class="li"><div>Wet-strength options</div></div>
+              <div class="li"><div>Low-Cobb surface sizing</div></div>
+              <div class="li"><div>Custom colors and finishes</div></div>
+              <div class="li"><div>High-bulk or low-porosity recipes</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px;">
+          <strong>Reel & Packaging Options</strong>
+          <div class="list" style="margin-top:8px;">
+            <div class="li"><div>Core IDs 76/101.6/152/400/600/800/1000/1200/1500/1800 mm</div></div>
+            <div class="li"><div>Reel OD 500–2500 mm; custom widths with trimmed edges</div></div>
+            <div class="li"><div>Brown/white wraps, metal/edge protectors, barcode & palletization</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 4: Applications & Value Adds -->
+    <section class="page">
+      <div class="inner">
+        <div class="grid two">
+          <div>
+            <h2>Applications</h2>
+            <div class="list">
+              <div class="li"><div>Corrugated boxes: FMCG, eCommerce, electronics, agri, auto parts</div></div>
+              <div class="li"><div>Paper bags and SOS bags</div></div>
+              <div class="li"><div>Industrial wrapping & interleaving</div></div>
+              <div class="li"><div>Cores, tubes, edge protectors, honeycomb structures</div></div>
+            </div>
+            <img src="assets/product-kraft-rolls.jpg" alt="Kraft paper reels ready for dispatch" style="margin-top:14px;border-radius:12px" />
+            <div class="caption">Consistent reel profiles for smooth converting.</div>
+          </div>
+
+          <div>
+            <h2>Value-Added Services</h2>
+            <div class="panel">
+              <div class="list">
+                <div class="li"><div>Technical onboarding for corrugators & printers</div></div>
+                <div class="li"><div>Grade optimization to reduce cost per box</div></div>
+                <div class="li"><div>Quality documents: COA, MSDS, compliance certificates</div></div>
+                <div class="li"><div>Customized packaging and labeling per destination</div></div>
+              </div>
+            </div>
+
+            <h3 style="margin-top:16px;">Why Choose Us</h3>
+            <div class="grid two">
+              <div class="kpi"><div class="num">99.3%</div><div class="sub">OTIF Delivery</div></div>
+              <div class="kpi"><div class="num ok">-7%</div><div class="sub">Average Waste Reduction</div></div>
+              <div class="kpi"><div class="num">24/7</div><div class="sub">Tech Support</div></div>
+              <div class="kpi"><div class="num">0</div><div class="sub">Claim Tolerance on Specs</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 5: Sustainability & Process -->
+    <section class="page">
+      <div class="inner">
+        <h2>Sustainability</h2>
+        <div class="grid two">
+          <div>
+            <p>We operate with a circular approach—maximizing recycled fiber, monitoring emissions, and optimizing water and energy consumption.</p>
+            <div class="grid three">
+              <div class="kpi"><div class="num">>60%</div><div class="sub">Recycled Fiber Use</div></div>
+              <div class="kpi"><div class="num">-15%</div><div class="sub">Specific Energy (5yr)</div></div>
+              <div class="kpi"><div class="num">-12%</div><div class="sub">Specific Water (5yr)</div></div>
+            </div>
+            <div class="panel" style="margin-top:12px;">
+              <strong>Environmental Controls</strong>
+              <div class="list" style="margin-top:8px;">
+                <div class="li"><div>Effluent treatment with online monitoring</div></div>
+                <div class="li"><div>Boiler & stack emissions within statutory norms</div></div>
+                <div class="li"><div>Waste segregation, fiber recovery, and sludge utilization</div></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <img src="assets/recycling.jpg" alt="Paper recycling and fiber recovery loop" style="border-radius:12px;" />
+            <div class="caption">Circularity across fiber sourcing, process water, and packaging materials.</div>
+            <hr />
+            <div class="panel">
+              <strong>Compliance & Certifications</strong>
+              <div class="list" style="margin-top:8px;">
+                <div class="li"><div>ISO 9001 Quality Management</div></div>
+                <div class="li"><div>ISO 14001 Environmental Management</div></div>
+                <div class="li"><div>ISO 45001 Occupational Health & Safety</div></div>
+                <div class="li"><div>FSC® Chain of Custody (on request)</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE 6: Contact -->
+    <section class="page">
+      <div class="inner">
+        <div class="grid two">
+          <div>
+            <h2>Contact</h2>
+            <p><strong>Kraft Paper Mill</strong><br/>
+               Industrial Estate Road, City, State, ZIP, Country</p>
+            <p>
+              Email: <a href="mailto:sales@example.com">sales@example.com</a><br/>
+              Phone: +1 555 123 4567<br/>
+              Web: <a href="https://example.com" target="_blank" rel="noopener">example.com</a>
+            </p>
+            <div class="panel">
+              <strong>Sales & Samples</strong>
+              <div class="list" style="margin-top:8px;">
+                <div class="li"><div>Global exports with documentation support</div></div>
+                <div class="li"><div>Custom GSM/BF trials on request</div></div>
+                <div class="li"><div>Tech evaluation at your plant</div></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3>Find Us</h3>
+            <div class="panel">
+              <div class="grid two">
+                <div>
+                  <div class="tag">Scan for latest specs</div>
+                  <img src="assets/qr-specs.png" alt="QR code linking to latest specs" style="margin-top:10px; width:180px; height:auto;"/>
+                </div>
+                <div>
+                  <div class="tag">Google Maps</div>
+                  <img src="assets/map-placeholder.png" alt="Map to Kraft Paper Mill" style="margin-top:10px; border-radius:10px;"/>
+                </div>
+              </div>
+              <p class="caption" style="margin-top:10px;">Replace QR and map images with your actual assets.</p>
+            </div>
+            <p class="muted" style="margin-top:10px;">© <span id="year"></span> Kraft Paper Mill. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
 
-  <!-- PAGE 2: ABOUT + STRENGTHS -->
-  <div class="page">
-    <div class="section">
-      <h2>About Us</h2>
-      <div class="band">
-        <p><b>Kraft Paper Mill LLC</b> is a premier kraft paper manufacturer delivering high-quality, eco-friendly solutions across the United States. As a <i>sister company and manufacturing partner of Ariya Packaging Industries (API)</i>, we combine global know-how with local service to support your growth while meeting rigorous environmental standards.</p>
-        <p>From our Norristown, PA facility, we provide responsive lead times, consistent quality, and flexible order quantities—whether you need kraft reels, sheets, specialty grades, or corrugated packaging components.</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Our Strengths & Capabilities</h2>
-      <div class="two-col">
-        <ul class="band">
-          <li><b>Advanced, automated lines</b> delivering > <b>25,000 MT</b> per year.</li>
-          <li><b>FSC-aligned sourcing</b> and resource-efficient processes.</li>
-          <li><b>Custom GSM, widths, cores</b>, and finishes on request.</li>
-          <li><b>Regional logistics</b> for PA, NJ, NY, and beyond.</li>
-          <li><b>Application support</b> from packaging specialists.</li>
-        </ul>
-        <ul class="band">
-          <li>Consistent <b>strength and porosity</b> control.</li>
-          <li><b>Greaseproof/wet-strength</b> options for specialty needs.</li>
-          <li>Strict <b>QA checkpoints</b> from pulp to finished roll/sheet.</li>
-          <li><b>Short runs to bulk volumes</b> with reliable schedules.</li>
-          <li><b>Private-label and print</b> options for retail presentation.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- PAGE 3: PRODUCTS -->
-  <div class="page kraft-bg">
-    <h2 style="margin-bottom:10px;">Product Categories</h2>
-    <p class="muted" style="margin:0 0 10px;">Precisely matched to your application—wrapping, converting, box-making, e‑commerce, and more.</p>
-
-    <div class="grid-tiles">
-      <div class="tile">
-        <img src="assets/svg/corrugated-rolls.svg" alt="Corrugated Rolls">
-        <div>
-          <h3>Corrugated Rolls</h3>
-          <p>Flexible protection for wrapping and void fill. Custom widths and diameters available.</p>
-        </div>
-      </div>
-
-      <div class="tile">
-        <img src="assets/svg/edge-protectors.svg" alt="Edge Protectors">
-        <div>
-          <h3>Edge Protectors</h3>
-          <p>Paper angle boards to reinforce pallet edges and minimize transit damage.</p>
-        </div>
-      </div>
-
-      <div class="tile">
-        <img src="assets/svg/honeycomb-paper.svg" alt="Honeycomb Paper">
-        <div>
-          <h3>Honeycomb Paper</h3>
-          <p>Lightweight, high-strength pads and boards for cushioning and load support.</p>
-        </div>
-      </div>
-
-      <div class="tile">
-        <img src="assets/images/icon-kraft.png" alt="Kraft Paper" onerror="this.style.opacity='0.2'">
-        <div>
-          <h3>Brown Kraft Paper</h3>
-          <p>General-purpose wrapping and industrial packaging in reels or sheets.</p>
-        </div>
-      </div>
-
-      <div class="tile">
-        <img src="assets/images/icon-bleached.png" alt="Bleached Kraft" onerror="this.style.opacity='0.2'">
-        <div>
-          <h3>Bleached Kraft Paper</h3>
-          <p>Clean appearance for food, retail, and premium applications.</p>
-        </div>
-      </div>
-
-      <div class="tile">
-        <img src="assets/images/icon-specialty.png" alt="Specialty Kraft" onerror="this.style.opacity='0.2'">
-        <div>
-          <h3>Specialty Kraft</h3>
-          <p>Wet-strength, greaseproof, and barrier-treated grades on request.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="note" style="margin-top:10px;">
-      Need a custom spec? Ask for exact GSM, Mullen/BF, widths, core IDs, and finish. Print and branding options available.
-    </div>
-  </div>
-
-  <!-- PAGE 4: MANUFACTURING & QUALITY + PHOTOS -->
-  <div class="page">
-    <div class="section">
-      <h2>Manufacturing & Quality</h2>
-      <div class="band">
-        <p>Our automated lines maintain tight tolerances from furnish prep to winding, ensuring stable caliper, strength, and surface quality. We emphasize material efficiency and responsible sourcing, with continuous improvement programs to minimize waste and energy use.</p>
-        <div class="photo-row">
-          <div class="photo">Manufacturing Photo Placeholder A</div>
-          <div class="photo">Manufacturing Photo Placeholder B</div>
-        </div>
-        <p class="note">Replace placeholders with high-resolution plant photos when available.</p>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Industries We Serve</h2>
-      <div class="three-col band">
-        <ul>
-          <li>Packaging & Shipping</li>
-          <li>E‑commerce & Retail</li>
-          <li>Food & Beverage</li>
-        </ul>
-        <ul>
-          <li>Textile & Apparel</li>
-          <li>Automotive & Industrial</li>
-          <li>Printing & Publishing</li>
-        </ul>
-        <ul>
-          <li>3PL / Fulfillment</li>
-          <li>Converters & Box Makers</li>
-          <li>Distribution & Wholesale</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- PAGE 5: CONTACT / BACK -->
-  <div class="page kraft-bg">
-    <div class="section">
-      <h2>Contact Us</h2>
-      <div class="band two-col">
-        <div>
-          <p><b>Kraft Paper Mill LLC</b><br>
-          1001 W Washington St, Norristown, PA, Unit 203</p>
-          <p>Phone: <b>630-796-5586</b><br>
-          Email: <a href="mailto:smanishm1@gmail.com">smanishm1@gmail.com</a><br>
-          Web: <a href="http://www.kraftpapermill.com">www.kraftpapermill.com</a></p>
-          <p class="muted">We Think Inside The Box and Packaging</p>
-        </div>
-        <div class="qr" style="text-align:center;">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=http%3A%2F%2Fwww.kraftpapermill.com" alt="QR: www.kraftpapermill.com">
-          <div class="muted" style="margin-top:6px;">Scan to inquire or place an order</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer no-break">
-      <div>© Kraft Paper Mill LLC • Sister Company & Manufacturing Partner of Ariya Packaging Industries • Serving from Norristown, PA</div>
-      <div style="margin-top:4px; font-weight:700;">Connecting Shores – East to West</div>
-    </div>
-  </div>
-
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
