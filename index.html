@@ -2,42 +2,284 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Kraft Paper Mill</title>
-  <meta name="description" content="Kraft Paper Mill – official website.">
-  <style>
-    :root { color-scheme: light dark; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin:0; }
-    header { padding: 14vh 2rem 4rem; text-align: center; background: radial-gradient(1200px 500px at 50% -200px, #e9f2ff, transparent); }
-    h1 { margin: 0 0 .5rem; font-size: clamp(2rem, 4vw + 1rem, 3rem); }
-    p.lead { margin: 0 auto; max-width: 56ch; font-size: clamp(1rem, 1vw + .9rem, 1.25rem); color: #555; }
-    main { max-width: 960px; margin: 2rem auto; padding: 0 1rem 3rem; }
-    .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 1.25rem; }
-    .muted { color:#666; }
-    a.button { display:inline-block; margin-top:1rem; background:#0d6efd; color:#fff; padding:.6rem 1rem; border-radius:8px; text-decoration:none; }
-    footer { text-align:center; padding: 2rem 1rem; color:#777; border-top:1px solid #eee; }
-    @media (prefers-color-scheme: dark) {
-      header { background: radial-gradient(1200px 500px at 50% -200px, #1f2937, transparent); }
-      .card { border-color:#374151; }
-      .muted, p.lead, footer { color:#aaa; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KPM - Kraft Paper Mill LLC | Serving Norristown & Greater Philadelphia</title>
+  <meta name="description" content="KPM - Kraft Paper Mill LLC provides quality kraft paper products to the Norristown and Greater Philadelphia area through our local distributor network. Located at 1001 W Washington St, Norristown, PA.">
+  <meta name="keywords" content="kraft paper, paper mill, Norristown PA, Philadelphia, packaging, industrial paper, distributor network">
+  <meta name="author" content="Kraft Paper Mill LLC">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kraftpapermill.com/">
+  <meta property="og:title" content="KPM - Kraft Paper Mill LLC | Serving Norristown & Greater Philadelphia">
+  <meta property="og:description" content="Quality kraft paper products serving the Norristown and Greater Philadelphia area through our local distributor network.">
+  <meta property="og:image" content="https://kraftpapermill.com/assets/img/logo.svg">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://kraftpapermill.com/">
+  <meta property="twitter:title" content="KPM - Kraft Paper Mill LLC | Serving Norristown & Greater Philadelphia">
+  <meta property="twitter:description" content="Quality kraft paper products serving the Norristown and Greater Philadelphia area through our local distributor network.">
+  <meta property="twitter:image" content="https://kraftpapermill.com/assets/img/logo.svg">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://kraftpapermill.com/">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/img/logo.svg">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  
+  <!-- Structured Data - LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Kraft Paper Mill LLC",
+    "alternateName": "KPM",
+    "description": "Kraft paper manufacturer serving the Norristown and Greater Philadelphia area through local distributor networks.",
+    "image": "https://kraftpapermill.com/assets/img/logo.svg",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "1001 W Washington St",
+      "addressLocality": "Norristown",
+      "addressRegion": "PA",
+      "postalCode": "19401",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "40.1217",
+      "longitude": "-75.3468"
+    },
+    "url": "https://kraftpapermill.com",
+    "telephone": "+1-610-555-0123",
+    "email": "info@kraftpapermill.com",
+    "priceRange": "$$",
+    "openingHours": [
+      "Mo-Fr 08:00-17:00"
+    ],
+    "sameAs": []
+  }
+  </script>
 </head>
 <body>
-  <header>
-    <h1>Kraft Paper Mill</h1>
-    <p class="lead">Website coming soon. This placeholder is deployed via Cloudflare Pages.</p>
-    <a class="button" href="mailto:info@kraftpapermill.com">Contact us</a>
+  <!-- Header and Navigation -->
+  <header class="header">
+    <nav class="nav">
+      <a href="/" aria-label="KPM Home">
+        <img src="/assets/img/logo.svg" alt="KPM - Kraft Paper Mill LLC" class="logo">
+      </a>
+      
+      <ul class="nav-links">
+        <li><a href="#capabilities">Capabilities</a></li>
+        <li><a href="#products">Products</a></li>
+        <li><a href="#industries">Industries</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#location">Location</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      
+      <button class="mobile-menu-toggle" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle mobile menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      
+      <div class="mobile-menu" id="mobile-menu">
+        <ul>
+          <li><a href="#capabilities">Capabilities</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#industries">Industries</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#location">Location</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
   </header>
-  <main>
-    <div class="card">
-      <h2>About</h2>
-      <p class="muted">We manufacture and supply kraft paper products. A detailed site will be published here shortly.</p>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1>Quality Kraft Paper Products for Pennsylvania</h1>
+      <p class="lead">Serving the Norristown and Greater Philadelphia area through our local distributor network. Your trusted partner for industrial-grade kraft paper solutions.</p>
+      <a href="#contact" class="cta-button">Get in Touch</a>
     </div>
+  </section>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Capabilities Section -->
+    <section id="capabilities" class="section">
+      <div class="container">
+        <h2 class="section-title">Our Capabilities</h2>
+        <p class="section-subtitle">Advanced manufacturing processes and quality control ensure consistent, reliable kraft paper products for your business needs.</p>
+        
+        <div class="grid grid-3">
+          <div class="card">
+            <h3>High-Volume Production</h3>
+            <p>State-of-the-art manufacturing facility capable of producing large quantities of kraft paper to meet demanding schedules and bulk orders.</p>
+          </div>
+          <div class="card">
+            <h3>Quality Assurance</h3>
+            <p>Rigorous testing and quality control processes ensure every roll meets or exceeds industry standards for strength, consistency, and performance.</p>
+          </div>
+          <div class="card">
+            <h3>Custom Solutions</h3>
+            <p>Flexible production capabilities allow us to create custom specifications tailored to your unique packaging and industrial requirements.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="section bg-light">
+      <div class="container">
+        <h2 class="section-title">Our Products</h2>
+        <p class="section-subtitle">Comprehensive range of kraft paper products designed for durability, strength, and versatility across multiple applications.</p>
+        
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Industrial Kraft Paper</h3>
+            <p>Heavy-duty kraft paper rolls ideal for industrial packaging, wrapping, and protective applications. Available in various weights and widths to suit your specific needs.</p>
+          </div>
+          <div class="card">
+            <h3>Packaging Solutions</h3>
+            <p>Specialized kraft paper designed for retail and commercial packaging, offering excellent printability and strength for branded packaging applications.</p>
+          </div>
+          <div class="card">
+            <h3>Protective Wrapping</h3>
+            <p>Moisture-resistant kraft paper perfect for protecting goods during storage and transportation, ensuring your products arrive in perfect condition.</p>
+          </div>
+          <div class="card">
+            <h3>Custom Grades</h3>
+            <p>Tailored kraft paper solutions engineered to meet specific industry requirements, from food-grade applications to heavy industrial use.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Industries Served Section -->
+    <section id="industries" class="section">
+      <div class="container">
+        <h2 class="section-title">Industries We Serve</h2>
+        <p class="section-subtitle">Trusted by businesses across the Greater Philadelphia region for reliable kraft paper solutions.</p>
+        
+        <div class="grid grid-4">
+          <div class="card">
+            <h3>Manufacturing</h3>
+            <p>Industrial packaging and protective wrapping for manufactured goods and equipment.</p>
+          </div>
+          <div class="card">
+            <h3>Food & Beverage</h3>
+            <p>Food-safe kraft paper solutions for packaging and food service applications.</p>
+          </div>
+          <div class="card">
+            <h3>Retail & E-commerce</h3>
+            <p>Sustainable packaging materials for retail products and online order fulfillment.</p>
+          </div>
+          <div class="card">
+            <h3>Construction</h3>
+            <p>Durable kraft paper for construction site protection and material wrapping.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section bg-light">
+      <div class="container">
+        <h2 class="section-title">Why Choose KPM?</h2>
+        <p class="section-subtitle">Located in the heart of Norristown, we combine local expertise with industrial-scale capabilities to serve the Greater Philadelphia area.</p>
+        
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Local Expertise</h3>
+            <p>Deep understanding of the Philadelphia region's business needs, with established relationships throughout the local distributor network for efficient supply chain management.</p>
+          </div>
+          <div class="card">
+            <h3>Proven Quality</h3>
+            <p>Decades of experience in kraft paper manufacturing, with a commitment to consistent quality and reliable delivery schedules that businesses depend on.</p>
+          </div>
+          <div class="card">
+            <h3>Responsive Service</h3>
+            <p>Quick turnaround times and flexible order quantities, from small custom orders to large-scale production runs, backed by personalized customer service.</p>
+          </div>
+          <div class="card">
+            <h3>Sustainable Practices</h3>
+            <p>Environmentally responsible manufacturing processes and recyclable kraft paper products that support your company's sustainability initiatives.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Location & Hours Section -->
+    <section id="location" class="section">
+      <div class="container">
+        <h2 class="section-title">Location & Hours</h2>
+        <p class="section-subtitle">Conveniently located in Norristown, Pennsylvania, serving the Greater Philadelphia area.</p>
+        
+        <div class="location-grid">
+          <div class="location-info">
+            <h3>Visit Our Facility</h3>
+            <div class="contact-details">
+              <p><strong>📍 Address:</strong><br>1001 W Washington St<br>Norristown, PA 19401, USA</p>
+              <p><strong>📞 Phone:</strong> <a href="tel:+16105550123">(610) 555-0123</a></p>
+              <p><strong>✉️ Email:</strong> <a href="mailto:info@kraftpapermill.com">info@kraftpapermill.com</a></p>
+            </div>
+            
+            <div class="hours">
+              <h4>Business Hours</h4>
+              <p><strong>Monday - Friday:</strong> 8:00 AM - 5:00 PM<br>
+              <strong>Saturday:</strong> By appointment<br>
+              <strong>Sunday:</strong> Closed</p>
+            </div>
+            
+            <a href="https://maps.google.com/?q=1001+W+Washington+St,+Norristown,+PA+19401" target="_blank" rel="noopener" class="map-link">Get Directions</a>
+          </div>
+          
+          <div class="map-container">
+            <a href="https://maps.google.com/?q=1001+W+Washington+St,+Norristown,+PA+19401" target="_blank" rel="noopener" class="map-link">
+              📍 View on Google Maps<br>
+              <small>1001 W Washington St, Norristown, PA 19401</small>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact CTA Section -->
+    <section id="contact" class="section bg-light">
+      <div class="container">
+        <h2 class="section-title">Ready to Get Started?</h2>
+        <p class="section-subtitle">Contact us today to discuss your kraft paper needs and discover how KPM can support your business with quality products and reliable service.</p>
+        
+        <div class="text-center">
+          <a href="mailto:info@kraftpapermill.com?subject=Kraft%20Paper%20Inquiry" class="cta-button mb-lg">Email Us Now</a>
+          <p class="mt-lg">
+            <strong>📞 Call us:</strong> <a href="tel:+16105550123">(610) 555-0123</a><br>
+            <strong>📧 Email:</strong> <a href="mailto:info@kraftpapermill.com">info@kraftpapermill.com</a>
+          </p>
+        </div>
+      </div>
+    </section>
   </main>
-  <footer>
-    © <span id="y"></span> Kraft Paper Mill
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; <span id="current-year">2024</span> Kraft Paper Mill LLC. All rights reserved.</p>
+      <p>
+        <a href="mailto:info@kraftpapermill.com">info@kraftpapermill.com</a> • 
+        <a href="tel:+16105550123">(610) 555-0123</a> • 
+        1001 W Washington St, Norristown, PA 19401
+      </p>
+    </div>
   </footer>
-  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+
+  <!-- JavaScript -->
+  <script src="/assets/js/app.js"></script>
 </body>
 </html>
