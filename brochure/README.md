@@ -28,3 +28,4 @@ This is a print‑ready, multi‑page HTML brochure you can export to PDF. It is
 ## Notes
 - The QR code currently uses an online generator pointing to `http://www.kraftpapermill.com`. Replace with a static PNG if you prefer offline assets.
 - Replace the two “Manufacturing Photo Placeholder” boxes with actual photos when available.
+- 
