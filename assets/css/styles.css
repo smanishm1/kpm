@@ -395,6 +395,54 @@ body {
   box-shadow: var(--box-shadow-lg);
 }
 
+/* Hero with Background Image */
+.hero--with-image {
+  /* Fallback background color in case image fails to load */
+  background-color: var(--gray-800);
+  
+  /* Background image with overlay for text contrast */
+  background-image: 
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)),
+    url("/assets/img/BocBanner.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* Generous padding for substantial hero */
+  padding: 140px var(--spacing-lg) var(--spacing-3xl);
+}
+
+.hero--with-image h1 {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.hero--with-image .lead {
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.hero--with-image .cta-button {
+  /* Enhanced focus state for accessibility */
+  transition: all 0.3s ease;
+}
+
+.hero--with-image .cta-button:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 3px;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero--with-image .cta-button {
+    transition: none;
+  }
+  
+  .hero--with-image .cta-button:hover {
+    transform: none;
+  }
+}
+
 /* Main Content Sections */
 .container {
   max-width: var(--max-width-container);
@@ -558,6 +606,22 @@ body {
 }
 
 /* Responsive Design */
+@media (max-width: 639px) {
+  .hero--with-image {
+    padding: 100px var(--spacing-md) var(--spacing-xl);
+  }
+  
+  .hero--with-image h1 {
+    font-size: var(--font-size-3xl);
+    line-height: 1.1;
+  }
+  
+  .hero--with-image .lead {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-xl);
+  }
+}
+
 @media (min-width: 640px) {
   .hero h1 {
     font-size: var(--font-size-5xl);
@@ -597,6 +661,10 @@ body {
   
   .hero {
     padding: 140px var(--spacing-lg) var(--spacing-3xl);
+  }
+  
+  .hero--with-image {
+    padding: 160px var(--spacing-lg) var(--spacing-3xl);
   }
   
   .section {
