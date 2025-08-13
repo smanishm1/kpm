@@ -48,6 +48,199 @@
   --box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+/* Announcement Banner */
+.announcement {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%);
+  background-image: url('/assets/img/banner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  z-index: 60;
+  transition: all 0.3s ease;
+}
+
+.announcement::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 100%);
+  z-index: 1;
+}
+
+.announcement__inner {
+  position: relative;
+  z-index: 2;
+  max-width: var(--max-width-container);
+  margin: 0 auto;
+  padding: var(--spacing-lg) var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+}
+
+.announcement__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.announcement__copy {
+  margin: 0;
+}
+
+.announcement__copy p {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.announcement__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.announcement__cta {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+}
+
+.announcement__cta:hover,
+.announcement__cta:focus {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+  color: white;
+  text-decoration: none;
+}
+
+.announcement__cta:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+.announcement__cta--phone::before {
+  content: '📞';
+  margin-right: var(--spacing-xs);
+}
+
+.announcement__cta--email::before {
+  content: '✉️';
+  margin-right: var(--spacing-xs);
+}
+
+.announcement__cta--products::before {
+  content: '📦';
+  margin-right: var(--spacing-xs);
+}
+
+.announcement__close {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: var(--font-size-lg);
+  font-weight: bold;
+  backdrop-filter: blur(5px);
+  flex-shrink: 0;
+}
+
+.announcement__close:hover,
+.announcement__close:focus {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.announcement__close:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+.announcement.hidden {
+  display: none !important;
+}
+
+/* Responsive Design for Announcement */
+@media (max-width: 768px) {
+  .announcement__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+  
+  .announcement__content {
+    gap: var(--spacing-sm);
+  }
+  
+  .announcement__copy p {
+    font-size: var(--font-size-base);
+    text-align: center;
+  }
+  
+  .announcement__actions {
+    justify-content: center;
+    gap: var(--spacing-sm);
+  }
+  
+  .announcement__cta {
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-sm) var(--spacing-xs);
+  }
+  
+  .announcement__close {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .announcement,
+  .announcement__cta,
+  .announcement__close {
+    transition: none;
+  }
+  
+  .announcement__cta:hover,
+  .announcement__close:hover {
+    transform: none;
+  }
+}
+
 body {
   font-family: var(--font-family);
   line-height: 1.6;
@@ -57,14 +250,14 @@ body {
 
 /* Header and Navigation */
 .header {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--gray-200);
-  z-index: 50;
+  z-index: 40;
   transition: all 0.3s ease;
 }
 

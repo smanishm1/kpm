@@ -172,6 +172,59 @@
         }
     }
     
+    // Announcement banner functionality
+    function initAnnouncementBanner() {
+        const banner = document.querySelector('#announcement-banner');
+        const closeButton = document.querySelector('.announcement__close');
+        const storageKey = 'kpm_announcement_v1';
+        
+        if (!banner || !closeButton) return;
+        
+        // Check if banner was previously dismissed
+        const isDismissed = localStorage.getItem(storageKey) === 'true';
+        
+        if (isDismissed) {
+            banner.classList.add('hidden');
+            return;
+        }
+        
+        // Handle dismiss button click
+        function dismissBanner() {
+            banner.classList.add('hidden');
+            localStorage.setItem(storageKey, 'true');
+        }
+        
+        // Add click event listener
+        closeButton.addEventListener('click', dismissBanner);
+        
+        // Add keyboard event listener for accessibility
+        closeButton.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                dismissBanner();
+            }
+        });
+        
+        // Handle scroll to products CTA
+        const productsLink = banner.querySelector('.announcement__cta--products');
+        if (productsLink) {
+            productsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const productsSection = document.getElementById('products');
+                if (productsSection) {
+                    const headerHeight = document.querySelector('.header').offsetHeight;
+                    const bannerHeight = banner.classList.contains('hidden') ? 0 : banner.offsetHeight;
+                    const targetPosition = productsSection.offsetTop - headerHeight - bannerHeight - 20;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+    }
+    
     // Initialize all functionality when DOM is loaded
     function init() {
         initMobileMenu();
@@ -180,6 +233,7 @@
         initContactForm();
         initScrollAnimations();
         updateCopyrightYear();
+        initAnnouncementBanner();
     }
     
     // Initialize when DOM is loaded
