@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>KPM Box Cost Calculator</title>
+<style>
+  :root {
+    --brown-dark:  #3E2008;
+    --brown-mid:   #7B4B1A;
+    --brown-light: #C68642;
+    --cream:       #FDF6EC;
+    --cream-dark:  #F0E0C8;
+    --green:       #1A7A34;
+    --green-bg:    #DFF2E1;
+    --amber:       #A05000;
+    --amber-bg:    #FFF3CD;
+    --text:        #1A0A00;
+    --muted:       #7A5C3A;
+    --white:       #ffffff;
+    --shadow:      0 4px 20px rgba(62,32,8,0.13);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    background: #EFE0CA;
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  /* ─── Header ─── */
+  header {
+    background: var(--brown-dark);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo-area h1 { color: #fff; font-size: 1.1rem; font-weight: 700; }
+  .logo-area p  { color: #F5D9B0; font-size: 0.68rem; margin-top: 2px; }
+  .header-badge {
+    background: var(--brown-light);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ─── Tabs ─── */
+  .tabs {
+    display: flex;
+    background: var(--brown-dark);
+    padding: 0 16px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .tab {
+    flex: 1;
+    padding: 11px 8px;
+    text-align: center;
+    color: #F5D9B0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .tab.active {
+    color: #fff;
+    border-bottom-color: var(--brown-light);
+  }
+
+  /* ─── Pages ─── */
+  .page { display: none; padding: 16px; max-width: 680px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ─── Card ─── */
+  .card {
+    background: var(--white);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .card-header {
+    background: var(--brown-mid);
+    color: #fff;
+    padding: 11px 16px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .card-body { padding: 18px 16px; }
+
+  /* ─── Inputs ─── */
+  .dim-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .input-group { display: flex; flex-direction: column; gap: 4px; }
+  label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  input[type="number"], input[type="text"] {
+    width: 100%;
+    padding: 12px 10px;
+    border: 2px solid var(--cream-dark);
+    border-radius: 10px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--cream);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: border 0.2s;
+  }
+  input[type="number"]:focus, input[type="text"]:focus {
+    border-color: var(--brown-light);
+    background: #fff;
+  }
+  .unit-hint { font-size: 0.65rem; color: var(--muted); margin-top: 1px; }
+
+  .gsm-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+    align-items: end;
+  }
+  .gsm-note {
+    background: var(--amber-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 0.75rem;
+    color: var(--amber);
+    line-height: 1.5;
+  }
+
+  /* ─── Result Hero ─── */
+  .result-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .price-box {
+    border-radius: 12px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .price-box.usd { background: var(--brown-dark); color: #fff; }
+  .price-box.inr { background: var(--cream-dark); color: var(--brown-dark); border: 2px solid var(--brown-light); }
+  .price-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7; margin-bottom: 4px; }
+  .price-value { font-size: 1.9rem; font-weight: 800; line-height: 1; }
+  .price-sub   { font-size: 0.65rem; opacity: 0.55; margin-top: 4px; }
+
+  /* ─── Breakdown ─── */
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .brow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 7px;
+    margin-bottom: 3px;
+    font-size: 0.84rem;
+  }
+  .brow:nth-child(odd) { background: var(--cream); }
+  .brow-label { color: var(--muted); }
+  .brow-formula { font-size: 0.68rem; color: var(--brown-light); font-style: italic; margin-left: 6px; }
+  .brow-val { font-weight: 700; }
+
+  /* ─── Empty state ─── */
+  .empty-state {
+    text-align: center;
+    padding: 28px 16px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .empty-icon { font-size: 2.5rem; margin-bottom: 8px; }
+
+  /* ─── Batch ─── */
+  .batch-item {
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+    border: 2px solid transparent;
+    transition: border 0.2s;
+  }
+  .batch-item:focus-within { border-color: var(--brown-light); background: #fff; }
+  .batch-top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+  .batch-dims {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .batch-dims input { font-size: 0.95rem; padding: 9px 8px; text-align: center; }
+  .batch-result-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .batch-res-box {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+  }
+  .batch-res-label { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; color: var(--muted); letter-spacing: 0.04em; }
+  .batch-res-val { font-size: 1rem; font-weight: 800; color: var(--brown-dark); margin-top: 2px; }
+  .batch-res-val.usd { color: var(--green); }
+  .batch-res-val.inr { color: var(--amber); }
+  .btn-remove {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+    border-radius: 6px;
+  }
+  .btn-remove:active { background: #fee; color: #c00; }
+  .batch-code-input { font-size: 0.9rem !important; padding: 9px 10px !important; font-weight: 700 !important; }
+
+  .btn-add {
+    width: 100%;
+    padding: 13px;
+    background: var(--white);
+    color: var(--brown-mid);
+    border: 2px dashed var(--brown-light);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 4px;
+  }
+  .btn-add:active { background: var(--cream-dark); }
+
+  /* ─── Reference ─── */
+  .ref-section { margin-bottom: 14px; }
+  .formula-box {
+    background: var(--brown-dark);
+    color: #fff;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+    line-height: 1.9;
+    margin-bottom: 12px;
+  }
+  .formula-box span { color: var(--brown-light); }
+  .note-box {
+    background: var(--amber-bg);
+    border-left: 3px solid var(--brown-light);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 13px;
+    font-size: 0.78rem;
+    color: var(--amber);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <h1>Kraft Paper Mill LLC</h1>
+    <p>Box Cost Calculator &nbsp;·&nbsp; Internal Tool</p>
+  </div>
+  <div class="header-badge">KPM</div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('single', this)">&#128230; Single Box</div>
+  <div class="tab" onclick="showTab('batch', this)">&#128203; Batch Compare</div>
+  <div class="tab" onclick="showTab('ref', this)">&#128218; Reference</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ SINGLE ══ -->
+<div class="page active" id="page-single">
+
+  <div class="card">
+    <div class="card-header">&#128230; Box Dimensions</div>
+    <div class="card-body">
+      <div class="dim-row">
+        <div class="input-group">
+          <label>Length (L)</label>
+          <input type="number" id="s-l" inputmode="decimal" placeholder="12" min="0" step="0.25" oninput="calcSingle()"/>
+          <span class="unit-hint">inches</span>
+        </div>
+        <div class="input-group">
+          <label>Width (W)</label>
+          <input type="number" id="s-w" inputmode="decimal" placeholder="10" min="0" step="0.25" oninput="calcSingle()"/>
+          <span class="unit-hint">inches</span>
+        </div>
+        <div class="input-group">
+          <label>Height (H)</label>
+          <input type="number" id="s-h" inputmode="decimal" placeholder="6" min="0" step="0.25" oninput="calcSingle()"/>
+          <span class="unit-hint">inches</span>
+        </div>
+      </div>
+      <div class="gsm-row">
+        <div class="input-group">
+          <label>GSM (optional)</label>
+          <input type="number" id="s-gsm" inputmode="numeric" placeholder="530" min="0" step="1" oninput="calcSingle()"/>
+          <span class="unit-hint">Combined board GSM</span>
+        </div>
+        <div class="gsm-note">
+          Leave blank to use<br/><strong>default 530 GSM</strong><br/>
+          (standard single wall)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result card — always visible, shows empty state until data entered -->
+  <div class="card">
+    <div class="card-header">&#128176; Cost Result</div>
+    <div class="card-body" id="single-result">
+      <div class="empty-state">
+        <div class="empty-icon">&#128230;</div>
+        Enter dimensions above to see the cost
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════ BATCH ══ -->
+<div class="page" id="page-batch">
+
+  <div id="batch-list"></div>
+  <button class="btn-add" onclick="addBatch()">+ Add Box Size</button>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════ REFERENCE ══ -->
+<div class="page" id="page-ref">
+
+  <div class="card">
+    <div class="card-header">&#128290; Formulas</div>
+    <div class="card-body">
+      <div class="formula-box">
+        <span>Cutting</span>  = (L + W) x 2 + 2<br/>
+        <span>Decal</span>    = W + H + 0.5<br/>
+        <span>Weight</span>   = (Cutting x Decal x GSM) / 1,550,000<br/>
+        <span>Rate INR</span> = Weight x Rs.95<br/>
+        <span>Rate USD</span> = Rate INR / 90
+      </div>
+      <div class="note-box">
+        &#9888;&#65039; Rough landed cost only — excludes taxes, duties, freight &amp; markup.<br/>
+        Dimensions in <strong>inches</strong>. GSM = combined board GSM.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">&#128203; Fixed Assumptions</div>
+    <div class="card-body">
+      <div class="brow"><span class="brow-label">Default GSM</span><span class="brow-val">530</span></div>
+      <div class="brow"><span class="brow-label">Production rate</span><span class="brow-val">Rs. 95 / kg</span></div>
+      <div class="brow"><span class="brow-label">Exchange rate</span><span class="brow-val">1 USD = Rs. 90</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">&#128203; Common GSM by Box Type</div>
+    <div class="card-body">
+      <div class="brow"><span class="brow-label">Single Wall — Standard (SW)</span><span class="brow-val">~530 GSM</span></div>
+      <div class="brow"><span class="brow-label">Single Wall — Light</span><span class="brow-val">440–480 GSM</span></div>
+      <div class="brow"><span class="brow-label">Medium Duty (MD)</span><span class="brow-val">600–650 GSM</span></div>
+      <div class="brow"><span class="brow-label">Heavy Duty Double Wall (HD)</span><span class="brow-val">800–1000 GSM</span></div>
+      <div class="brow"><span class="brow-label">Triple Wall / Extra Heavy</span><span class="brow-val">1100+ GSM</span></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── Core formula ─────────────────────────────────────────────────────────────
+function calcBox(l, w, h, gsm) {
+  gsm = (gsm && gsm > 0) ? gsm : 530;
+  var cutting = (l + w) * 2 + 2;
+  var decal   = w + h + 0.5;
+  var weight  = (cutting * decal * gsm) / 1550000;
+  var inr     = weight * 95;
+  var usd     = inr / 90;
+  return { cutting: cutting, decal: decal, weight: weight, inr: inr, usd: usd, gsm: gsm };
+}
+
+// ─── Tab switching ────────────────────────────────────────────────────────────
+function showTab(name, el) {
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('page-' + name).classList.add('active');
+}
+
+// ─── Single calculator ────────────────────────────────────────────────────────
+function calcSingle() {
+  var l   = parseFloat(document.getElementById('s-l').value);
+  var w   = parseFloat(document.getElementById('s-w').value);
+  var h   = parseFloat(document.getElementById('s-h').value);
+  var gsm = parseFloat(document.getElementById('s-gsm').value) || 0;
+  var el  = document.getElementById('single-result');
+
+  if (!l || !w || !h || l <= 0 || w <= 0 || h <= 0) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128230;</div>Enter dimensions above to see the cost</div>';
+    return;
+  }
+
+  var r = calcBox(l, w, h, gsm);
+
+  el.innerHTML =
+    '<div class="result-hero">' +
+      '<div class="price-box usd">' +
+        '<div class="price-label">Cost (USD)</div>' +
+        '<div class="price-value">$' + r.usd.toFixed(4) + '</div>' +
+        '<div class="price-sub">1 USD = Rs.90</div>' +
+      '</div>' +
+      '<div class="price-box inr">' +
+        '<div class="price-label">Cost (INR)</div>' +
+        '<div class="price-value">&#8377;' + r.inr.toFixed(2) + '</div>' +
+        '<div class="price-sub">@ Rs.95 / kg</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="section-label">Step-by-step breakdown</div>' +
+    '<div class="brow"><span class="brow-label">Dimensions<span class="brow-formula">L x W x H</span></span><span class="brow-val">' + l + '" x ' + w + '" x ' + h + '"</span></div>' +
+    '<div class="brow"><span class="brow-label">GSM used</span><span class="brow-val">' + r.gsm + ' GSM</span></div>' +
+    '<div class="brow"><span class="brow-label">Cutting<span class="brow-formula">(L+W)x2+2</span></span><span class="brow-val">' + r.cutting.toFixed(2) + ' in</span></div>' +
+    '<div class="brow"><span class="brow-label">Decal<span class="brow-formula">W+H+0.5</span></span><span class="brow-val">' + r.decal.toFixed(2) + ' in</span></div>' +
+    '<div class="brow"><span class="brow-label">Weight<span class="brow-formula">(CxDxGSM)/1550000</span></span><span class="brow-val">' + r.weight.toFixed(6) + ' kg</span></div>' +
+    '<div class="brow"><span class="brow-label">Rate INR<span class="brow-formula">wt x 95</span></span><span class="brow-val">&#8377;' + r.inr.toFixed(4) + '</span></div>' +
+    '<div class="brow"><span class="brow-label">Rate USD<span class="brow-formula">INR / 90</span></span><span class="brow-val">$' + r.usd.toFixed(4) + '</span></div>';
+}
+
+// ─── Batch comparator ─────────────────────────────────────────────────────────
+var batchCount = 0;
+
+function addBatch(code, l, w, h, gsm) {
+  batchCount++;
+  var id = batchCount;
+  var container = document.getElementById('batch-list');
+  var div = document.createElement('div');
+  div.className = 'batch-item';
+  div.id = 'bi-' + id;
+  div.innerHTML =
+    '<div class="batch-top">' +
+      '<input type="text" class="batch-code-input" id="bc-code-' + id + '" placeholder="Box code / name" value="' + (code||'') + '" style="width:100%;padding:9px 10px;border:2px solid #E8D5BA;border-radius:10px;font-size:0.9rem;font-weight:700;color:#1A0A00;background:#FDF6EC;outline:none;"/>' +
+      '<button class="btn-remove" onclick="removeBatch(' + id + ')">&#10005;</button>' +
+    '</div>' +
+    '<div class="batch-dims">' +
+      '<div class="input-group"><label>L (in)</label><input type="number" id="bc-l-' + id + '" inputmode="decimal" placeholder="L" value="' + (l||'') + '" min="0" step="0.25" oninput="recalcBatch(' + id + ')"/></div>' +
+      '<div class="input-group"><label>W (in)</label><input type="number" id="bc-w-' + id + '" inputmode="decimal" placeholder="W" value="' + (w||'') + '" min="0" step="0.25" oninput="recalcBatch(' + id + ')"/></div>' +
+      '<div class="input-group"><label>H (in)</label><input type="number" id="bc-h-' + id + '" inputmode="decimal" placeholder="H" value="' + (h||'') + '" min="0" step="0.25" oninput="recalcBatch(' + id + ')"/></div>' +
+      '<div class="input-group"><label>GSM</label><input type="number" id="bc-gsm-' + id + '" inputmode="numeric" placeholder="530" value="' + (gsm||'') + '" min="0" step="1" oninput="recalcBatch(' + id + ')"/></div>' +
+    '</div>' +
+    '<div class="batch-result-row">' +
+      '<div class="batch-res-box"><div class="batch-res-label">Weight</div><div class="batch-res-val" id="bc-wt-' + id + '">—</div></div>' +
+      '<div class="batch-res-box"><div class="batch-res-label">Cost INR</div><div class="batch-res-val inr" id="bc-inr-' + id + '">—</div></div>' +
+      '<div class="batch-res-box"><div class="batch-res-label">Cost USD</div><div class="batch-res-val usd" id="bc-usd-' + id + '">—</div></div>' +
+    '</div>';
+  container.appendChild(div);
+  if (l && w && h) recalcBatch(id);
+}
+
+function recalcBatch(id) {
+  var l   = parseFloat(document.getElementById('bc-l-' + id).value);
+  var w   = parseFloat(document.getElementById('bc-w-' + id).value);
+  var h   = parseFloat(document.getElementById('bc-h-' + id).value);
+  var gsm = parseFloat(document.getElementById('bc-gsm-' + id).value) || 0;
+  if (l > 0 && w > 0 && h > 0) {
+    var r = calcBox(l, w, h, gsm);
+    document.getElementById('bc-wt-' + id).textContent  = r.weight.toFixed(5) + ' kg';
+    document.getElementById('bc-inr-' + id).textContent = '\u20B9' + r.inr.toFixed(2);
+    document.getElementById('bc-usd-' + id).textContent = '$' + r.usd.toFixed(4);
+  } else {
+    document.getElementById('bc-wt-' + id).textContent  = '—';
+    document.getElementById('bc-inr-' + id).textContent = '—';
+    document.getElementById('bc-usd-' + id).textContent = '—';
+  }
+}
+
+function removeBatch(id) {
+  var el = document.getElementById('bi-' + id);
+  if (el) el.remove();
+}
+
+// Pre-load sample KPM sizes
+addBatch('SW110806', 11,  8,  6, 530);
+addBatch('SW151106', 15, 11,  6, 530);
+addBatch('SW222210', 22, 22, 10, 530);
+addBatch('HD161612', 16, 16, 12, 900);
+</script>
+</body>
+</html>
