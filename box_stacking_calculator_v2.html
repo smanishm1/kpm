@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Box Stacking Calculator - Container Capacity v2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .header p {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #34495e;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #e0e4e8;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #3498db;
+        }
+        
+        .radio-option label {
+            margin-bottom: 0;
+            text-transform: none;
+            letter-spacing: normal;
+            font-weight: 500;
+            color: #34495e;
+            cursor: pointer;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-calculate {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            grid-column: 1 / -1;
+        }
+        
+        .btn-calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-reset {
+            background: #ecf0f1;
+            color: #34495e;
+            border: 1.5px solid #bdc3c7;
+        }
+        
+        .btn-reset:hover {
+            background: #e8ebed;
+            border-color: #95a5a6;
+        }
+        
+        .btn-copy {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-copy:hover {
+            background: #229954;
+        }
+        
+        .results-section {
+            grid-column: 1 / -1;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ecf0f1 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            text-align: center;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+        
+        .metric-unit {
+            font-size: 12px;
+            color: #95a5a6;
+        }
+        
+        .metric-card.success {
+            border-left-color: #27ae60;
+            background: linear-gradient(135deg, #f0fdf4 0%, #e8f5e9 100%);
+        }
+        
+        .metric-card.warning {
+            border-left-color: #f39c12;
+            background: linear-gradient(135deg, #fffbf0 0%, #fff3e0 100%);
+        }
+        
+        .metric-card.info {
+            border-left-color: #9b59b6;
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e5f5 100%);
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            border: 1.5px solid #ecf0f1;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 1.5px solid #e0e4e8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+        }
+        
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #ecf0f1;
+            color: #34495e;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .info-box {
+            background: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #34495e;
+            margin-top: 15px;
+        }
+        
+        .info-box strong {
+            color: #2c3e50;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .flute-info {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .highlight-yellow {
+            background-color: #fffacd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Box Stacking Calculator</h1>
+            <p>Calculate container capacity and pallet configurations instantly (v2 - Fixed Double Wall)</p>
+        </div>
+        
+        <div class="content-wrapper">
+            <!-- INPUT SECTION -->
+            <div class="card">
+                <div class="card-title">
+                    <span>⚙️</span> Box & Container Details
+                </div>
+                
+                <div class="form-group">
+                    <label>Container Type</label>
+                    <select id="containerType" onchange="updateContainerDimensions()">
+                        <option value="custom">Custom Dimensions</option>
+                        <option value="20ft">20ft Container (591 × 234 × 238 cm)</option>
+                        <option value="40ft">40ft Container (1204 × 234 × 238 cm)</option>
+                        <option value="40hc">40ft HC Container (1204 × 234 × 269 cm)</option>
+                    </select>
+                </div>
+                
+                <div class="section-title" style="margin-top: 20px;">Container Dimensions (cm)</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Length</label>
+                        <input type="number" id="containerL" value="474" min="1" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Width</label>
+                        <input type="number" id="containerW" value="96" min="1" step="1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Height</label>
+                    <input type="number" id="containerH" value="114" min="1" step="1">
+                </div>
+                
+                <div class="section-title" style="margin-top: 20px;">Box Dimensions (inches)</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Length</label>
+                        <input type="number" id="boxL" value="22.8" min="0.1" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Width</label>
+                        <input type="number" id="boxW" value="18" min="0.1" step="0.1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Height</label>
+                    <input type="number" id="boxH" value="20" min="0.1" step="0.1">
+                </div>
+                
+                <div class="section-title" style="margin-top: 20px;">Corrugated Board Type</div>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="wall-single" name="wallType" value="single" onchange="updateWallType()">
+                        <label for="wall-single">Single Wall (1-ply flute)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="wall-double" name="wallType" value="double" checked onchange="updateWallType()">
+                        <label for="wall-double">Double Wall (3-ply + 3-ply)</label>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Flute Profile (per side)</label>
+                    <select id="fluteProfile" onchange="updateFlutHeight()">
+                        <option value="0">Select a flute profile...</option>
+                        <option value="1.6">A-Flute (1.6mm per side)</option>
+                        <option value="2.4">B-Flute (2.4mm per side)</option>
+                        <option value="4.0">C-Flute (4.0mm per side) - Standard</option>
+                        <option value="6.8">E-Flute (6.8mm per side)</option>
+                        <option value="9.5">F-Flute (9.5mm per side)</option>
+                        <option value="custom">Custom Thickness</option>
+                    </select>
+                    <div class="flute-info" id="fluteInfo">
+                        Thickness per side - will be multiplied by wall type (single or double)
+                    </div>
+                </div>
+                
+                <div id="customFlute" class="form-group hidden">
+                    <label>Custom Thickness per Side (mm)</label>
+                    <input type="number" id="customFluteValue" value="4" min="0.1" step="0.1">
+                    <div class="flute-info">Enter thickness for ONE side only</div>
+                </div>
+                
+                <div id="fluteInfo2" style="background: #e3f2fd; padding: 12px; border-radius: 6px; margin: 15px 0; font-size: 12px; color: #1565c0; border-left: 4px solid #1976d2;">
+                    <strong>Double Wall Calculation:</strong> If C-Flute (4.0mm) + Double Wall = 4.0mm × 2 = <span class="highlight-yellow">8.0mm total</span>
+                </div>
+                
+                <div class="section-title" style="margin-top: 20px;">Pallet Configuration</div>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="pallet-no" name="palletType" value="no" onchange="togglePalletOptions()">
+                        <label for="pallet-no">No Pallet (Floor Stacking)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="pallet-single" name="palletType" value="single" checked onchange="togglePalletOptions()">
+                        <label for="pallet-single">Single Stack (22 Pallets)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="pallet-double" name="palletType" value="double" onchange="togglePalletOptions()">
+                        <label for="pallet-double">Double Stack (44 Pallets)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="pallet-custom" name="palletType" value="custom" onchange="togglePalletOptions()">
+                        <label for="pallet-custom">Custom Pallet Size</label>
+                    </div>
+                </div>
+                
+                <div id="palletOptions" class="hidden" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Pallet Length (inches)</label>
+                            <input type="number" id="palletL" value="48" min="1" step="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Pallet Width (inches)</label>
+                            <input type="number" id="palletW" value="40" min="1" step="1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Pallet Height (inches)</label>
+                        <input type="number" id="palletH" value="5" min="0" step="0.5">
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn-calculate" onclick="calculateCapacity()">Calculate Capacity</button>
+                    <button class="btn-reset" onclick="resetForm()">Reset</button>
+                </div>
+                
+                <div id="successMessage" class="success-message">
+                    ✓ Calculation complete!
+                </div>
+            </div>
+            
+            <!-- RESULTS SECTION -->
+            <div class="card">
+                <div class="card-title">
+                    <span>📊</span> Results
+                </div>
+                
+                <div id="resultsContent" class="hidden">
+                    <div class="results-grid">
+                        <div class="metric-card success">
+                            <div class="metric-label">Total Boxes</div>
+                            <div class="metric-value" id="totalBoxes">0</div>
+                            <div class="metric-unit">in container</div>
+                        </div>
+                        <div class="metric-card info">
+                            <div class="metric-label">Boxes per Pallet</div>
+                            <div class="metric-value" id="boxesPerPallet">0</div>
+                            <div class="metric-unit">per pallet</div>
+                        </div>
+                        <div class="metric-card warning">
+                            <div class="metric-label">Space Utilization</div>
+                            <div class="metric-value" id="spaceUtil">0%</div>
+                            <div class="metric-unit">efficiency</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Total Pallets</div>
+                            <div class="metric-value" id="totalPallets">0</div>
+                            <div class="metric-unit">in container</div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-title">Detailed Breakdown</div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Dimension</th>
+                                    <th>Value</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Boxes Along Length</td>
+                                    <td id="boxesLength">-</td>
+                                    <td id="detailLength" style="font-size: 12px; color: #95a5a6;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Boxes Along Width</td>
+                                    <td id="boxesWidth">-</td>
+                                    <td id="detailWidth" style="font-size: 12px; color: #95a5a6;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Vertical Layers</td>
+                                    <td id="layers">-</td>
+                                    <td id="detailLayers" style="font-size: 12px; color: #95a5a6;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Boxes per Layer</td>
+                                    <td id="boxesPerLayer">-</td>
+                                    <td id="detailPerLayer" style="font-size: 12px; color: #95a5a6;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Flat Box Height</td>
+                                    <td id="flatBoxHeight">-</td>
+                                    <td id="detailFlatBoxHeight" style="font-size: 12px; color: #95a5a6;">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Flat Box Footprint</td>
+                                    <td id="flatBoxDim">-</td>
+                                    <td id="detailFlatBox" style="font-size: 12px; color: #95a5a6;">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="palletInfo" class="info-box" style="display: none;">
+                        <strong>Pallet Configuration:</strong><br>
+                        <span id="palletInfoText"></span>
+                    </div>
+                    
+                    <button class="btn-copy" onclick="copyResults()" style="width: 100%; margin-top: 20px;">
+                        📋 Copy Results
+                    </button>
+                </div>
+                
+                <div id="emptyState" style="text-align: center; padding: 40px 20px; color: #95a5a6;">
+                    <div style="font-size: 48px; margin-bottom: 10px;">📭</div>
+                    <p>Enter box and container dimensions and click "Calculate Capacity"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const IN_TO_CM = 2.54;
+        const CM_TO_IN = 1 / IN_TO_CM;
+
+        function updateContainerDimensions() {
+            const type = document.getElementById('containerType').value;
+            const dimensions = {
+                '20ft': { l: 591, w: 234, h: 238 },
+                '40ft': { l: 1204, w: 234, h: 238 },
+                '40hc': { l: 1204, w: 234, h: 269 },
+            };
+            
+            if (dimensions[type]) {
+                const d = dimensions[type];
+                document.getElementById('containerL').value = d.l;
+                document.getElementById('containerW').value = d.w;
+                document.getElementById('containerH').value = d.h;
+            }
+        }
+
+        function updateWallType() {
+            const wallType = document.querySelector('input[name="wallType"]:checked').value;
+            const infoDiv = document.getElementById('fluteInfo2');
+            if (wallType === 'double') {
+                infoDiv.innerHTML = '<strong>Double Wall Calculation:</strong> If C-Flute (4.0mm) + Double Wall = 4.0mm × 2 = <span class="highlight-yellow">8.0mm total</span>';
+            } else {
+                infoDiv.innerHTML = '<strong>Single Wall Calculation:</strong> If C-Flute (4.0mm) + Single Wall = 4.0mm × 1 = <span class="highlight-yellow">4.0mm total</span>';
+            }
+        }
+
+        function updateFlutHeight() {
+            const profile = document.getElementById('fluteProfile').value;
+            const customFlute = document.getElementById('customFlute');
+            
+            if (profile === 'custom') {
+                customFlute.classList.remove('hidden');
+            } else {
+                customFlute.classList.add('hidden');
+            }
+        }
+
+        function togglePalletOptions() {
+            const palletOptions = document.getElementById('palletOptions');
+            const isPallet = document.querySelector('input[name="palletType"]:checked').value === 'custom';
+            
+            if (isPallet) {
+                palletOptions.classList.remove('hidden');
+            } else {
+                palletOptions.classList.add('hidden');
+            }
+        }
+
+        function calculateCapacity() {
+            // Get container dimensions (convert cm to inches)
+            const containerL = parseFloat(document.getElementById('containerL').value) * CM_TO_IN;
+            const containerW = parseFloat(document.getElementById('containerW').value) * CM_TO_IN;
+            const containerH = parseFloat(document.getElementById('containerH').value) * CM_TO_IN;
+
+            // Get box dimensions
+            const boxL = parseFloat(document.getElementById('boxL').value);
+            const boxW = parseFloat(document.getElementById('boxW').value);
+            const boxH = parseFloat(document.getElementById('boxH').value);
+
+            // Get wall type (single or double)
+            const wallType = document.querySelector('input[name="wallType"]:checked').value;
+            const wallMultiplier = wallType === 'double' ? 2 : 1;
+
+            // Get flute profile
+            let fluteThickness = 0;
+            const fluteProfile = document.getElementById('fluteProfile').value;
+            
+            if (fluteProfile === 'custom') {
+                const customValue = parseFloat(document.getElementById('customFluteValue').value);
+                fluteThickness = (customValue / 25.4) * wallMultiplier;
+            } else if (fluteProfile !== '0') {
+                const fluteValue = parseFloat(fluteProfile);
+                fluteThickness = (fluteValue / 25.4) * wallMultiplier;
+            }
+
+            if (!fluteThickness || fluteThickness <= 0) {
+                alert('Please select or enter a valid flute profile thickness');
+                return;
+            }
+
+            // Calculate flat box dimensions
+            const flatBoxL = boxL + boxW; // L + W
+            const flatBoxW = boxW + boxH; // W + H
+            const flatBoxH = fluteThickness; // This is now properly doubled for double wall
+
+            // Calculate boxes along each dimension
+            const boxesLength = Math.floor(containerL / flatBoxL);
+            const boxesWidth = Math.floor(containerW / flatBoxW);
+            const boxesHeight = Math.floor(containerH / flatBoxH);
+
+            const boxesPerLayer = boxesLength * boxesWidth;
+            const totalBoxes = boxesPerLayer * boxesHeight;
+
+            // Calculate space utilization
+            const usedL = boxesLength * flatBoxL;
+            const usedW = boxesWidth * flatBoxW;
+            const usedH = boxesHeight * flatBoxH;
+            const volumeUsed = usedL * usedW * usedH;
+            const volumeTotal = containerL * containerW * containerH;
+            const spaceUtil = ((volumeUsed / volumeTotal) * 100).toFixed(1);
+
+            // Pallet configuration
+            const palletType = document.querySelector('input[name="palletType"]:checked').value;
+            let boxesPerPallet = 0;
+            let totalPallets = 0;
+            let palletInfoText = '';
+
+            if (palletType === 'no') {
+                totalPallets = 0;
+                boxesPerPallet = totalBoxes;
+                palletInfoText = 'Floor stacking configuration - no pallets used';
+            } else if (palletType === 'single' || palletType === 'double') {
+                const standardPalletL = 48; // inches
+                const standardPalletW = 40; // inches
+                
+                const boxesOnPalletL = Math.floor(standardPalletL / flatBoxL);
+                const boxesOnPalletW = Math.floor(standardPalletW / flatBoxW);
+                boxesPerPallet = boxesOnPalletL * boxesOnPalletW * boxesHeight;
+                
+                const palletRows = Math.floor(containerL / standardPalletL);
+                const palletsPerRow = Math.floor(containerW / standardPalletW);
+                const palletsPerLayer = palletRows * palletsPerRow;
+                
+                const stacks = palletType === 'single' ? 1 : 2;
+                totalPallets = palletsPerLayer * stacks;
+                
+                palletInfoText = `Standard pallet (48" × 40")<br>
+                    Boxes per pallet: ${boxesPerPallet}<br>
+                    Configuration: ${palletsPerLayer} pallets/layer × ${stacks} stack(s) = ${totalPallets} total pallets`;
+            } else if (palletType === 'custom') {
+                const palletL = parseFloat(document.getElementById('palletL').value);
+                const palletW = parseFloat(document.getElementById('palletW').value);
+                const palletH = parseFloat(document.getElementById('palletH').value);
+
+                const boxesOnPalletL = Math.floor(palletL / flatBoxL);
+                const boxesOnPalletW = Math.floor(palletW / flatBoxW);
+                const palletLayers = Math.floor((containerH - palletH) / flatBoxH);
+                boxesPerPallet = boxesOnPalletL * boxesOnPalletW * palletLayers;
+
+                const palletRows = Math.floor(containerL / palletL);
+                const palletsPerRow = Math.floor(containerW / palletW);
+                totalPallets = palletRows * palletsPerRow;
+
+                palletInfoText = `Custom pallet (${palletL}" × ${palletW}")<br>
+                    Pallet height: ${palletH}"<br>
+                    Boxes per pallet: ${boxesPerPallet}<br>
+                    Total pallets: ${totalPallets}`;
+            }
+
+            // Update UI
+            document.getElementById('totalBoxes').textContent = totalBoxes.toLocaleString();
+            document.getElementById('boxesPerPallet').textContent = boxesPerPallet.toLocaleString();
+            document.getElementById('spaceUtil').textContent = spaceUtil;
+            document.getElementById('totalPallets').textContent = totalPallets.toLocaleString();
+
+            document.getElementById('boxesLength').textContent = boxesLength;
+            document.getElementById('detailLength').textContent = `${boxesLength} × ${flatBoxL.toFixed(2)}" = ${(boxesLength * flatBoxL).toFixed(2)}" (of ${containerL.toFixed(2)}")`;
+
+            document.getElementById('boxesWidth').textContent = boxesWidth;
+            document.getElementById('detailWidth').textContent = `${boxesWidth} × ${flatBoxW.toFixed(2)}" = ${(boxesWidth * flatBoxW).toFixed(2)}" (of ${containerW.toFixed(2)}")`;
+
+            document.getElementById('layers').textContent = boxesHeight;
+            document.getElementById('detailLayers').textContent = `${boxesHeight} × ${flatBoxH.toFixed(4)}" = ${(boxesHeight * flatBoxH).toFixed(2)}" (of ${containerH.toFixed(2)}")`;
+
+            document.getElementById('boxesPerLayer').textContent = boxesPerLayer;
+            document.getElementById('detailPerLayer').textContent = `${boxesLength} (length) × ${boxesWidth} (width) boxes`;
+
+            const thicknessMM = fluteThickness * 25.4;
+            document.getElementById('flatBoxHeight').textContent = `${flatBoxH.toFixed(4)}"`;
+            document.getElementById('detailFlatBoxHeight').textContent = `${thicknessMM.toFixed(2)}mm ${wallType === 'double' ? '(double wall = 2×)' : '(single wall)'}`;
+
+            document.getElementById('flatBoxDim').textContent = `${flatBoxL.toFixed(2)}" × ${flatBoxW.toFixed(2)}"`;
+            document.getElementById('detailFlatBox').textContent = `(${boxL.toFixed(1)}" + ${boxW.toFixed(1)}") × (${boxW.toFixed(1)}" + ${boxH.toFixed(1)}")`;
+
+            const palletInfo = document.getElementById('palletInfo');
+            if (totalPallets > 0 || palletType === 'no') {
+                palletInfo.style.display = 'block';
+                document.getElementById('palletInfoText').innerHTML = palletInfoText;
+            }
+
+            // Show results
+            document.getElementById('resultsContent').classList.remove('hidden');
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('successMessage').classList.add('show');
+            
+            setTimeout(() => {
+                document.getElementById('successMessage').classList.remove('show');
+            }, 3000);
+        }
+
+        function copyResults() {
+            const totalBoxes = document.getElementById('totalBoxes').textContent;
+            const boxesPerPallet = document.getElementById('boxesPerPallet').textContent;
+            const spaceUtil = document.getElementById('spaceUtil').textContent;
+            const totalPallets = document.getElementById('totalPallets').textContent;
+            const flatBoxHeight = document.getElementById('flatBoxHeight').textContent;
+
+            const text = `Box Stacking Calculator Results\n\nTotal Boxes: ${totalBoxes}\nBoxes per Pallet: ${boxesPerPallet}\nFlat Box Height: ${flatBoxHeight}\nSpace Utilization: ${spaceUtil}%\nTotal Pallets: ${totalPallets}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Results copied to clipboard!');
+            });
+        }
+
+        function resetForm() {
+            document.getElementById('containerType').value = 'custom';
+            document.getElementById('containerL').value = 474;
+            document.getElementById('containerW').value = 96;
+            document.getElementById('containerH').value = 114;
+            document.getElementById('boxL').value = 22.8;
+            document.getElementById('boxW').value = 18;
+            document.getElementById('boxH').value = 20;
+            document.getElementById('fluteProfile').value = '0';
+            document.getElementById('customFlute').classList.add('hidden');
+            document.getElementById('wall-double').checked = true;
+            document.getElementById('pallet-single').checked = true;
+            document.getElementById('palletOptions').classList.add('hidden');
+            document.getElementById('resultsContent').classList.add('hidden');
+            document.getElementById('emptyState').classList.remove('hidden');
+            updateWallType();
+        }
+
+        // Initialize
+        updateWallType();
+    </script>
+</body>
+</html>
