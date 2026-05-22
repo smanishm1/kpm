@@ -1,78 +1,444 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>KPM | Latest Inventory In-Stock</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="icon" type="image/svg+xml" href="/assets/img/logo.svg">
-  <link rel="stylesheet" href="/assets/css/styles.css">
-  <style>
-    table.inventory {width:100%;border-collapse:collapse;font-size:.9rem;}
-    table.inventory th,table.inventory td{border:1px solid #ddd;padding:.5rem .6rem;text-align:left;}
-    table.inventory th{background:#f5f5f5;}
-    .note{font-size:.75rem;color:#666;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPM — Inventory Size Search</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;background:#f2f4f0;color:#1a1a1a;min-height:100vh}
+
+/* ── HEADER ── */
+.header{background:linear-gradient(135deg,#2d5016 0%,#4a7c26 60%,#6aaa38 100%);color:#fff;padding:22px 36px 18px;display:flex;justify-content:space-between;align-items:center}
+.brand{font-size:22px;font-weight:700;letter-spacing:-0.5px}.brand span{color:#b8e06a}
+.brand-sub{font-size:10px;font-weight:300;letter-spacing:2px;text-transform:uppercase;opacity:.75;margin-top:3px}
+.hdr-contact{text-align:right;font-size:11px;opacity:.85;line-height:1.7}
+.hdr-contact a{color:#b8e06a;text-decoration:none}
+
+/* ── SEARCH PANEL ── */
+.search-wrap{background:#fff;border-bottom:1px solid #dde8d0;padding:20px 36px 16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.search-label{font-size:11px;font-weight:600;color:#4a7c26;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.search-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search-box{flex:1;min-width:240px;max-width:420px;position:relative}
+.search-box input{width:100%;padding:10px 42px 10px 14px;border:2px solid #c8ddb0;border-radius:8px;font-size:15px;font-family:inherit;outline:none;transition:border-color .2s;background:#fafdf6}
+.search-box input:focus{border-color:#4a7c26;background:#fff}
+.search-box input::placeholder{color:#aaa}
+.search-icon{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:#888;font-size:16px;pointer-events:none}
+.clear-btn{padding:10px 18px;background:#f0f0f0;border:2px solid #ddd;border-radius:8px;font-size:13px;cursor:pointer;transition:all .15s;font-family:inherit}
+.clear-btn:hover{background:#e0e0e0}
+.search-hint{font-size:11.5px;color:#888;margin-top:7px}
+.search-hint strong{color:#4a7c26}
+.cat-filters{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.cat-btn{padding:4px 12px;border-radius:20px;font-size:11.5px;font-weight:600;border:1.5px solid #c8ddb0;background:#f5f9f0;color:#4a7c26;cursor:pointer;transition:all .15s}
+.cat-btn.active,.cat-btn:hover{background:#4a7c26;color:#fff;border-color:#4a7c26}
+
+/* ── RESULTS HEADER ── */
+.results-hdr{padding:14px 36px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.results-title{font-size:14px;font-weight:700;color:#2d5016}
+.results-count{background:#e8ede0;color:#4a7c26;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px}
+.match-type{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+.match-exact{background:#d4edda;color:#1a6630}
+.match-close{background:#fff3cd;color:#856404}
+.match-none{background:#f8d7da;color:#721c24}
+
+/* ── SECTION DIVIDER ── */
+.section-div{padding:12px 36px 4px}
+.section-div .sec-title{font-size:11px;font-weight:700;color:#4a7c26;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e0e8d0;padding-bottom:5px;display:flex;align-items:center;gap:8px}
+
+/* ── TABLE ── */
+.tbl-wrap{padding:0 36px 4px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{padding:7px 10px;text-align:left;font-size:10px;font-weight:700;color:#4a7c26;text-transform:uppercase;letter-spacing:.6px;background:#f3f7ee;border-bottom:2px solid #d0e0b8;white-space:nowrap}
+th.c,td.c{text-align:center}
+tbody tr{border-bottom:1px solid #f0f3ec;transition:background .1s}
+tbody tr:hover{background:#f7fdf2}
+tbody tr.highlight-exact{background:#f0fbe8!important;border-left:3px solid #4a7c26}
+tbody tr.highlight-close{background:#fffbf0!important;border-left:3px solid #e0a000}
+td{padding:8px 10px;vertical-align:middle}
+.sku{font-family:'Courier New',monospace;font-size:11px;font-weight:700;color:#2d5016;background:#eef7e4;padding:2px 6px;border-radius:4px}
+.dims{font-size:14px;font-weight:600;color:#1a1a1a}
+.dimx{color:#999;font-size:11px;margin:0 1px}
+.specs-note{font-size:11px;color:#888}
+.qty-chip{font-size:11px;font-weight:600;color:#555;background:#f0f0f0;padding:1px 7px;border-radius:10px}
+.dist-chip{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap}
+.dist-0{background:#d4edda;color:#1a6630}
+.dist-1{background:#e8f5d8;color:#2a6010}
+.dist-2{background:#fff3cd;color:#856404}
+.dist-3{background:#ffe8b0;color:#7a5000}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:10px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.b-new{background:#e8f5d8;color:#3a7010;border:1px solid #b8e08a}
+.b-stk{background:#f0fbf0;color:#2a8a2a;border:1px solid #b0e0b0}
+.b-low{background:#fff8e0;color:#b07800;border:1px solid #f0d080}
+.b-out{background:#fef2f2;color:#c0392b;border:1px solid #f0b0b0}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:40px 20px;color:#999}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty h3{font-size:15px;color:#555;margin-bottom:6px}
+.empty p{font-size:12.5px;line-height:1.6}
+
+/* ── FOOTER ── */
+.footer{background:#2d5016;color:rgba(255,255,255,.75);padding:16px 36px;display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.footer-note{font-size:11px;line-height:1.7}.footer-note strong{color:#b8e06a}
+.footer-brand{font-size:17px;font-weight:700;color:#fff;text-align:right}.footer-brand span{color:#b8e06a}
+.footer-sub{font-size:10px;opacity:.55;margin-top:2px;text-align:right}
+
+.no-results-rec{padding:10px 36px 0;font-size:12.5px;color:#856404;background:#fffbee;border-left:4px solid #e0a000;margin:0 36px 0;border-radius:0 6px 6px 0}
+</style>
 </head>
 <body>
-<header class="header">
-  <nav class="nav">
-    <a href="/" aria-label="KPM Home">
-      <img src="/assets/img/logo.svg" alt="KPM - Kraft Paper Mill LLC" class="logo">
-    </a>
-    <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-    </ul>
-  </nav>
-</header>
 
-<main class="section">
-  <div class="container">
-    <h1>Latest Inventory In-Stock </h1>
-    <p>Current available sizes and products (subject to change). Contact us to confirm real-time availability.</p>
-
-    <table class="inventory">
-      <thead>
-        <tr>
-          <th>SKU Code</th>
-          <th>Size</th>
-          <th>Description</th>
-          <th>Bundle Quantity</th>
-          <th>Pallet Quantity</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>SW050510</td><td>5X5X10</td><td>32 ECT  (Out Of Stock) </td><td>25</td><td>1200</td></tr>
-        <tr><td>SW060606</td><td>6X6X6</td><td>32 ECT (Out of stock) </td><td>25</td><td>1800</td></tr>
-        <tr><td>SW080808</td><td>8X8X8</td><td>32 ECT (Out of stock) </td><td>25</td><td>900</td></tr>
-        <tr><td>MD101010</td><td>10X10X10</td><td>232 ECT (Out of stock) </td><td>10</td><td>500</td></tr>
-        
-        <tr><td>SW12106</td><td>12X10X6</td><td>200 lb test / 44 ECT (Out of stock)</td><td>10</td><td>500</td></tr>
-        <tr><td>MD121212</td><td>12X12X12</td><td>200 lb test / 44 ECT (Out of stock)</td><td>10</td><td>500</td></tr>
-        <tr><td>SW12094</td><td>12X09X4</td><td>200 lb test / 44 ECT (Out of stock)</td><td>10</td><td>500</td></tr>
-        <tr><td>SW12098</td><td>12X09X8</td><td>200 lb test / 44 ECT (Out of stock)</td><td>10</td><td>500</td></tr>
-        <tr><td>MD141414</td><td>14X14X14</td><td>200 lb test / 44 ECT (Out of stock)</td><td>10</td><td>250</td></tr>
-        <tr><td>SW15107</td><td>15X10X7</td><td>200 lb test / 44 ECT</td><td>10</td><td>100</td></tr>
-        <tr><td>SW15116</td><td>15X11X6</td><td>200 lb test / 44 ECT</td><td>10</td><td>100</td></tr>
-        <tr><td>SW15126</td><td>15X12X6</td><td>200 lb test / 44 ECT</td><td>10</td><td>500</td></tr>
-        <tr><td>SW15158</td><td>15X15X8</td><td>200 lb test / 44 ECT</td><td>10</td><td>500</td></tr>
-        <tr><td>SW18146</td><td>18X14X6</td><td>200 lb test / 44 ECT  (Out of stock)</td><td>10</td><td>250</td></tr>
-        <tr><td>SW181818</td><td>18X18X18</td><td>200 lb test / 44 ECT (Out of stock)</td><td>10</td><td>120</td></tr>
-        <tr><td>HD201216</td><td>20X12X16</td><td>275 LB. TEST DOUBLE WALL BOXES (@Discounted Price)</td><td>10</td><td>100</td></tr>
-        <tr><td>SW222210</td><td>22X22X10</td><td>200 lb test / 44 ECT</td><td>10</td><td>120</td></tr>
-        <tr><td>HD221816</td><td>22X18X16</td><td>275 LB. TEST DOUBLE WALL BOXES</td><td>10</td><td>100</td></tr>
-        <tr><td>HD161612</td><td>16X16X12</td><td>275 LB. TEST DOUBLE WALL BOXES</td><td>10</td><td>100</td></tr>
-        <tr><td>HD202020</td><td>20X20X20</td><td>275 LB. TEST DOUBLE WALL BOXES</td><td>10</td><td>70</td></tr>
-        <tr><td>KPR12</td><td>12"</td><td>#50 basis weight Kraft Paper roll</td><td>-</td><td>100</td></tr>
-        <tr><td>KPR24</td><td>24"</td><td>#50 basis weight Kraft Paper roll</td><td>-</td><td>50</td></tr>
-        <tr><td>COR24</td><td>48"</td><td>B-flute CORRUGATED WRAP</td><td>-</td><td>5</td></tr>
-      </tbody>
-    </table>
-
-    <p class="note">Need a custom size or higher quantity? Email <a href="mailto:kpm.admin@kraftpapermill.com">kpm.admin@kraftpapermill.com</a> or call <a href="tel:+12675449315">267-544-9315</a>.</p>
-    <p><a class="cta-button" href="/">Back to Home</a></p>
+<div class="header">
+  <div>
+    <div class="brand">Kraft Paper <span>Mill</span> LLC</div>
+    <div class="brand-sub">Packaging Solutions · Philadelphia, PA</div>
   </div>
-</main>
+  <div class="hdr-contact">
+    <div>300 E Godfrey Ave, Philadelphia, PA 19120</div>
+    <div>&#128222; 630-796-5586 &nbsp;|&nbsp; 267-544-9315</div>
+    <div>&#9993; <a href="mailto:sales@kraftpapermill.com">sales@kraftpapermill.com</a></div>
+  </div>
+</div>
 
+<div class="search-wrap">
+  <div class="search-label">&#128269; Search by Box Size</div>
+  <div class="search-row">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder='e.g. 12x10x6  or  15 11 6  or  just "12"' autocomplete="off" spellcheck="false">
+      <span class="search-icon">&#128269;</span>
+    </div>
+    <button class="clear-btn" onclick="clearSearch()">&#10005; Clear</button>
+  </div>
+  <div class="search-hint">Type any dimension or full size like <strong>12×9×8</strong>. We'll find exact matches and suggest the closest available sizes.</div>
+  <div class="cat-filters">
+    <button class="cat-btn active" onclick="setFilter('all',this)">All Items</button>
+    <button class="cat-btn" onclick="setFilter('Single Wall',this)">Single Wall</button>
+    <button class="cat-btn" onclick="setFilter('Medium Duty',this)">Medium Duty</button>
+    <button class="cat-btn" onclick="setFilter('Double Wall',this)">Double Wall</button>
+    <button class="cat-btn" onclick="setFilter('Rolls',this)">Rolls</button>
+    <button class="cat-btn" onclick="setFilter('Paper Products',this)">Paper Products</button>
+  </div>
+</div>
+
+<div id="app"></div>
+
+<div class="footer">
+  <div class="footer-note">
+    All items FOB Philadelphia, PA &nbsp;·&nbsp; Same / next day fulfillment<br>
+    <strong>Contact us for pricing &amp; volume discounts</strong> &nbsp;·&nbsp; Availability subject to prior sale
+  </div>
+  <div>
+    <div class="footer-brand">Kraft Paper <span>Mill</span></div>
+    <div class="footer-sub">sales@kraftpapermill.com &nbsp;|&nbsp; 630-796-5586</div>
+    <div class="footer-sub">Inventory · May 2026</div>
+  </div>
+</div>
+
+<script>
+// ── INVENTORY DATA ──────────────────────────────────────────────────────────
+const INV = [
+  // Single Wall 3-Ply
+  {sku:'SW050510',l:5,  w:5,  h:10, cat:'Single Wall', ply:'3-Ply Single Wall', qty:1200, pallet:1200,status:'new'},
+  {sku:'SW060606',l:6,  w:6,  h:6,  cat:'Single Wall', ply:'3-Ply Single Wall', qty:1798, pallet:1800,status:'new'},
+  {sku:'SW080808',l:8,  w:8,  h:8,  cat:'Single Wall', ply:'3-Ply Single Wall', qty:900,  pallet:900, status:'new'},
+  {sku:'SW101010',l:10, w:10, h:10, cat:'Single Wall', ply:'3-Ply Single Wall', qty:1000, pallet:500, status:'new'},
+  {sku:'SW110806',l:11, w:8,  h:6,  cat:'Single Wall', ply:'3-Ply Single Wall, 44 ECT', qty:1678, pallet:500, status:'stk'},
+  {sku:'SW120606',l:12, w:6,  h:6,  cat:'Single Wall', ply:'3-Ply Single Wall', qty:1550, pallet:1000,status:'new'},
+  {sku:'SW120904',l:12, w:9,  h:4,  cat:'Single Wall', ply:'3-Ply Single Wall', qty:2000, pallet:500, status:'new'},
+  {sku:'SW120908',l:12, w:9,  h:8,  cat:'Single Wall', ply:'3-Ply Single Wall', qty:1500, pallet:500, status:'new'},
+  {sku:'SW121006',l:12, w:10, h:6,  cat:'Single Wall', ply:'3-Ply Single Wall', qty:1780, pallet:500, status:'new'},
+  {sku:'SW121212',l:12, w:12, h:12, cat:'Single Wall', ply:'3-Ply Single Wall', qty:1400, pallet:500, status:'new'},
+  {sku:'SW151007',l:15, w:10, h:7,  cat:'Single Wall', ply:'3-Ply Single Wall, 44 ECT', qty:1895, pallet:600, status:'stk'},
+  {sku:'SW151106',l:15, w:11, h:6,  cat:'Single Wall', ply:'3-Ply Single Wall, 44 ECT', qty:1740, pallet:600, status:'stk'},
+  {sku:'SW151206',l:15, w:12, h:6,  cat:'Single Wall', ply:'3-Ply Single Wall',          qty:119,  pallet:500, status:'low'},
+  {sku:'SW151508',l:15, w:15, h:8,  cat:'Single Wall', ply:'3-Ply Single Wall, 44 ECT', qty:760,  pallet:500, status:'stk'},
+  {sku:'SW161616',l:16, w:16, h:16, cat:'Single Wall', ply:'3-Ply Single Wall', qty:489,  pallet:120, status:'new'},
+  {sku:'SW181406',l:18, w:14, h:6,  cat:'Single Wall', ply:'3-Ply Single Wall', qty:500,  pallet:250, status:'new'},
+  {sku:'SW181410',l:18, w:14, h:10, cat:'Single Wall', ply:'3-Ply Single Wall', qty:495,  pallet:250, status:'new'},
+  {sku:'SW181818',l:18, w:18, h:18, cat:'Single Wall', ply:'3-Ply Single Wall', qty:189,  pallet:120, status:'new'},
+  {sku:'SW202020',l:20, w:20, h:20, cat:'Single Wall', ply:'3-Ply Single Wall', qty:125,  pallet:120, status:'new'},
+  {sku:'SW222210',l:22, w:22, h:10, cat:'Single Wall', ply:'3-Ply Single Wall, 44 ECT', qty:732,  pallet:120, status:'stk'},
+  // Medium Duty
+  {sku:'MD141414',l:14, w:14, h:14, cat:'Medium Duty', ply:'3-Ply Medium Duty', qty:733,  pallet:250, status:'new'},
+  // Double Wall 5-Ply
+  {sku:'HD161612',l:16, w:16, h:12, cat:'Double Wall', ply:'5-Ply Double Wall Heavy Duty', qty:1161, pallet:90, status:'stk'},
+  {sku:'HD201216',l:20, w:12, h:16, cat:'Double Wall', ply:'5-Ply Double Wall Heavy Duty', qty:1358, pallet:80, status:'new'},
+  {sku:'HD202020',l:20, w:20, h:20, cat:'Double Wall', ply:'5-Ply Double Wall Heavy Duty', qty:0,    pallet:70, status:'out'},
+  {sku:'HD221816',l:22, w:18, h:16, cat:'Double Wall', ply:'5-Ply Double Wall Heavy Duty', qty:980,  pallet:60, status:'new'},
+  // Rolls (no dims)
+  {sku:'KPROLL12', l:null,w:null,h:null, cat:'Rolls', ply:'#50 lb basis · ~12 lb/roll · 1,200 ft', qty:384, status:'new', width:'12"',  uom:'Roll'},
+  {sku:'KPROLL24', l:null,w:null,h:null, cat:'Rolls', ply:'#50 lb basis · ~24 lb/roll · 900 ft',   qty:112, status:'stk', width:'24"',  uom:'Roll'},
+  {sku:'COROLL48', l:null,w:null,h:null, cat:'Rolls', ply:'B-flute corrugated · furniture & fragile', qty:36, status:'low', width:'48"', uom:'Roll'},
+  // Paper
+  {sku:'PCUP01',   l:null,w:null,h:null, cat:'Paper Products', ply:'Disposable · food service grade · contact for pricing', qty:31, status:'new', width:'500 cups/box', uom:'Box'},
+];
+
+const CATS = {
+  'Single Wall': { icon:'📦', color:'#eef7e0', border:'#c8ddb0' },
+  'Medium Duty': { icon:'📦', color:'#fef9e8', border:'#f0d890' },
+  'Double Wall':  { icon:'🔷', color:'#f0e8f8', border:'#d0b8e8' },
+  'Rolls':        { icon:'🌀', color:'#f8f0e0', border:'#e0c898' },
+  'Paper Products':{ icon:'☕', color:'#e8f4fb', border:'#b0d8f0' },
+};
+
+let currentFilter = 'all';
+let currentQuery  = '';
+
+// ── SEARCH / PARSE ──────────────────────────────────────────────────────────
+function parseDims(q) {
+  // Extract up to 3 numbers from input
+  const nums = q.match(/\d+(\.\d+)?/g);
+  if (!nums) return null;
+  return nums.slice(0,3).map(Number);
+}
+
+function dimDistance(a, item) {
+  // Try all 6 permutations of item dims vs query dims
+  if (!item.l) return Infinity;
+  const b = [item.l, item.w, item.h];
+  const perms = [
+    [b[0],b[1],b[2]], [b[0],b[2],b[1]],
+    [b[1],b[0],b[2]], [b[1],b[2],b[0]],
+    [b[2],b[0],b[1]], [b[2],b[1],b[0]],
+  ];
+  let best = Infinity;
+  for (const p of perms) {
+    const ndims = a.length;
+    let d = 0;
+    for (let i=0;i<ndims;i++) d += Math.pow(a[i]-p[i],2);
+    best = Math.min(best, Math.sqrt(d));
+  }
+  return best;
+}
+
+function isExactMatch(dims, item) {
+  if (!item.l || !dims) return false;
+  const b = [item.l, item.w, item.h];
+  const a = dims;
+  if (a.length === 3) {
+    const perms = [
+      [b[0],b[1],b[2]], [b[0],b[2],b[1]],
+      [b[1],b[0],b[2]], [b[1],b[2],b[0]],
+      [b[2],b[0],b[1]], [b[2],b[1],b[0]],
+    ];
+    return perms.some(p => a[0]===p[0] && a[1]===p[1] && a[2]===p[2]);
+  }
+  if (a.length === 2) {
+    return b.some((v,i) => v===a[0] && b[(i+1)%3]===a[1])
+        || b.some((v,i) => v===a[1] && b[(i+1)%3]===a[0]);
+  }
+  if (a.length === 1) {
+    return b.includes(a[0]);
+  }
+  return false;
+}
+
+function containsDim(dims, item) {
+  if (!item.l || !dims) return false;
+  const b = [item.l, item.w, item.h];
+  return dims.every(d => b.includes(d));
+}
+
+// ── BADGES ──────────────────────────────────────────────────────────────────
+function badge(status) {
+  const map = {
+    new: '<span class="badge b-new">✦ New In</span>',
+    stk: '<span class="badge b-stk">● In Stock</span>',
+    low: '<span class="badge b-low">⚠ Low Stock</span>',
+    out: '<span class="badge b-out">✕ Out of Stock</span>',
+  };
+  return map[status] || '';
+}
+
+function distBadge(d) {
+  if (d === 0)   return '<span class="dist-chip dist-0">Exact Match</span>';
+  if (d <= 3)    return '<span class="dist-chip dist-1">Very Close</span>';
+  if (d <= 7)    return '<span class="dist-chip dist-2">Close</span>';
+  return             '<span class="dist-chip dist-3">Similar</span>';
+}
+
+// ── ROW RENDERING ────────────────────────────────────────────────────────────
+function rowBox(item, highlight, dist) {
+  const cls = highlight === 'exact' ? 'highlight-exact' : highlight === 'close' ? 'highlight-close' : '';
+  const dimHtml = item.l != null
+    ? `<span class="dims">${item.l}<span class="dimx">×</span>${item.w}<span class="dimx">×</span>${item.h}</span>`
+    : `<span class="dims" style="color:#888">—</span>`;
+  const distCol = dist !== undefined ? `<td class="c">${distBadge(dist)}</td>` : '';
+  return `
+    <tr class="${cls}">
+      <td><span class="sku">${item.sku}</span></td>
+      <td>${dimHtml}</td>
+      <td class="c"><span class="qty-chip">${item.qty.toLocaleString()}</span></td>
+      <td class="c">${item.pallet ? item.pallet.toLocaleString() : '—'}</td>
+      <td><span class="specs-note">${item.ply||''}</span></td>
+      <td class="c">${badge(item.status)}</td>
+      ${distCol}
+    </tr>`;
+}
+
+function rowRoll(item, highlight, dist) {
+  const cls = highlight === 'exact' ? 'highlight-exact' : '';
+  const distCol = dist !== undefined ? `<td class="c"></td>` : '';
+  return `
+    <tr class="${cls}">
+      <td><span class="sku">${item.sku}</span></td>
+      <td><span class="dims">${item.width||'—'}</span></td>
+      <td class="c"><span class="qty-chip">${item.qty.toLocaleString()}</span></td>
+      <td class="c">—</td>
+      <td><span class="specs-note">${item.ply||''}</span></td>
+      <td class="c">${badge(item.status)}</td>
+      ${distCol}
+    </tr>`;
+}
+
+function tableHead(showDist) {
+  const distH = showDist ? '<th class="c">Match</th>' : '';
+  return `<thead><tr>
+    <th>SKU</th><th>Size (L×W×H in.)</th>
+    <th class="c">On Hand</th><th class="c">Pallet Qty</th>
+    <th>Specs</th><th class="c">Status</th>${distH}
+  </tr></thead>`;
+}
+
+// ── MAIN RENDER ──────────────────────────────────────────────────────────────
+function render() {
+  const app   = document.getElementById('app');
+  const q     = currentQuery.trim();
+  const dims  = q ? parseDims(q) : null;
+  const filt  = currentFilter;
+
+  let items = INV.filter(i => filt === 'all' || i.cat === filt);
+
+  // ── No search: show all grouped by category ──────────────────────────────
+  if (!dims || !q) {
+    const cats = filt === 'all'
+      ? ['Single Wall','Medium Duty','Double Wall','Rolls','Paper Products']
+      : [filt];
+
+    let html = `<div class="results-hdr">
+      <span class="results-title">All Items</span>
+      <span class="results-count">${items.filter(i=>i.qty>0).length} in stock</span>
+    </div>`;
+
+    for (const cat of cats) {
+      const catItems = items.filter(i => i.cat === cat);
+      if (!catItems.length) continue;
+      const cfg = CATS[cat] || {};
+      html += `
+        <div class="section-div">
+          <div class="sec-title" style="color:#2d5016;border-color:${cfg.border||'#ddd'}">
+            ${cfg.icon||'📦'} &nbsp;${cat} &nbsp;<span style="color:#aaa;font-weight:400;font-size:10px">${catItems.length} item${catItems.length>1?'s':''}</span>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+        <table>${tableHead(false)}<tbody>`;
+
+      for (const item of catItems) {
+        if (item.l != null) html += rowBox(item,'','');
+        else html += rowRoll(item,'','');
+      }
+      html += '</tbody></table></div>';
+    }
+
+    app.innerHTML = html;
+    return;
+  }
+
+  // ── Search mode ────────────────────────────────────────────────────────────
+  // Compute distances for box items
+  const boxItems = items.filter(i => i.l != null);
+  const nonBox   = items.filter(i => i.l == null);
+
+  const scored = boxItems.map(item => ({
+    item,
+    exact: isExactMatch(dims, item),
+    dist:  dimDistance(dims, item),
+  })).sort((a,b) => a.dist - b.dist);
+
+  const exactMatches = scored.filter(s => s.exact);
+  const hasExact     = exactMatches.length > 0;
+  // Close matches: next 5, excluding exact, distance < 20
+  const closeMatches = scored.filter(s => !s.exact && s.dist < 20).slice(0,5);
+
+  let html = '';
+
+  // ── Exact results ──
+  if (hasExact) {
+    html += `<div class="results-hdr" style="margin-bottom:4px">
+      <span class="results-title">Exact Match Found</span>
+      <span class="results-count">${exactMatches.length} result${exactMatches.length>1?'s':''}</span>
+      <span class="match-type match-exact">✓ Exact</span>
+    </div>
+    <div class="tbl-wrap"><table>${tableHead(true)}<tbody>`;
+    for (const {item,dist} of exactMatches) {
+      html += rowBox(item,'exact',0);
+    }
+    html += '</tbody></table></div>';
+  } else {
+    html += `<div class="results-hdr">
+      <span class="results-title">No Exact Match for "${q}"</span>
+      <span class="match-type match-none">✕ No Exact Match</span>
+    </div>
+    <div class="no-results-rec">&#128161; Showing the closest available sizes below — sorted by how similar they are to your requested dimensions.</div>`;
+  }
+
+  // ── Close / recommended results ──
+  if (closeMatches.length > 0) {
+    const label = hasExact ? 'Similar Sizes You May Also Like' : 'Recommended — Closest Available Sizes';
+    html += `<div class="section-div" style="margin-top:${hasExact?'10px':'6px'}">
+      <div class="sec-title" style="color:#856404;border-color:#e8c860">
+        💡 &nbsp;${label}
+      </div>
+    </div>
+    <div class="tbl-wrap"><table>${tableHead(true)}<tbody>`;
+    for (const {item,dist} of closeMatches) {
+      const hl = dist <= 3 ? 'close' : '';
+      html += rowBox(item, hl, Math.round(dist * 10)/10);
+    }
+    html += '</tbody></table></div>';
+  } else if (!hasExact) {
+    html += `<div style="padding:30px 36px;text-align:center;color:#999">
+      <div style="font-size:32px;margin-bottom:10px">🔍</div>
+      <div style="font-size:14px;color:#666;margin-bottom:5px">No close matches found for <strong>${q}</strong></div>
+      <div style="font-size:12px">Try a different size, or <a href="mailto:sales@kraftpapermill.com" style="color:#4a7c26">contact us</a> for custom sizing.</div>
+    </div>`;
+  }
+
+  // ── Show non-box items (rolls etc) if filter includes them ──
+  const nonBoxFiltered = nonBox.filter(i => filt === 'all' || i.cat === filt);
+  if (nonBoxFiltered.length && filt === 'all') {
+    // Only show if user might want to see them when not searching for a box size
+  }
+
+  app.innerHTML = html;
+}
+
+// ── EVENT WIRING ─────────────────────────────────────────────────────────────
+document.getElementById('searchInput').addEventListener('input', function() {
+  currentQuery = this.value;
+  render();
+});
+document.getElementById('searchInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') clearSearch();
+});
+
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  currentQuery = '';
+  render();
+}
+
+function setFilter(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+render();
+</script>
 </body>
 </html>
